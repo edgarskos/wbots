@@ -2,3 +2,4 @@ __pycache__
 apicache
 throttle.ctrl
 user-config.py
+pywikibot.lwp
