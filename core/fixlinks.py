@@ -5,9 +5,11 @@ from pywikibot import pagegenerators
 import html
 import sys
 import re
+from core.config import *
 
 def fixlink(article):
-	test = 0
+	if testmode == 1:
+		printlog('testmode')
 	errorcout = 0
 	fixedlinks = []
 	invalidlinks = []
@@ -51,7 +53,7 @@ def fixlink(article):
 		f = html.unescape(str(fixedlink))
 		text = text.replace(i, f)
 
-	if text != oldtext and test != 1:
+	if text != oldtext and testmode == 0:
 		page.text = text
 		if errorcout > 1:
 			page.save(u"Botti korjasi linkkejä.")
@@ -59,3 +61,5 @@ def fixlink(article):
 			page.save(u"Botti korjasi linkin.")
 	elif errorcout == 0:
 		printlog('no invalid links found: '+ article)
+
+	return errorcout
