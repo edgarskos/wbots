@@ -43,4 +43,8 @@ def fixpiped(article ,text):
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has removed text from pipedlink because it's same as link. "
 
+	elif errorcout == 0:
+		printlog('fixpiped no invalid links found: '+ article)
+		oldtext = text
+
 	return errorcout, text, saves, zeroedit

@@ -34,7 +34,7 @@ def fix2brackets(article, text):
 			saves = u"Bot has removed excessive brackets from external link. "
 
 	elif errorcout == 0:
-		printlog('no invalid links found: '+ article)
+		printlog('fix2brackets no invalid links found: '+ article)
 		oldtext = text
 
 	printlog('done')

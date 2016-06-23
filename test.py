@@ -1,7 +1,10 @@
 import re
 
-text = 'moi kaikki perkele [[Category:Auto]]'
+characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()'
 
-text = text.replace('[[Ylätason verkkotunnus', 'kakak')
-
-print(text)
+chars = 'wggasdasddsalfsdfds'
+for i in chars:
+	print(i)
+	if i == 'l':
+		continue
+	print('moi')

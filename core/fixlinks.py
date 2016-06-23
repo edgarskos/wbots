@@ -11,10 +11,13 @@ def fixlink(article ,text):
 	errorcout = 0
 	saves = ''
 	zeroedit = 0
+	linkpartlist = []
 	fixedlinks = []
 	invalidlinks = []
 	text = str(text)
 	oldtext = text
+	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()'
+	special = '!?*[]{}('
 	printlog('fixlink testing site: '+ article)
 	soup = BeautifulSoup(text, "lxml")
 
@@ -23,20 +26,51 @@ def fixlink(article ,text):
 		link = str(hit)
 		link = link.replace('<ref>', '').replace('</ref>', '')
 		matches = re.search(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', link)
-		if 'http://' not in link and 'https://' not in link and matches != None:
+		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link:
 			errorcout += 1
 			invalidlinks.append(link)
 			if '[' in link and ']' in  link:
-				printlog('invalid link: '+ link)
-				link = link.replace('[','')
-				link = '[http://'+link
-				log('should be: '+ link)
-				fixedlinks.append(link)
+				linkpartlist = link.split('.')
+				print(linkpartlist)
+				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+					if any((char in linkpartlist[0]) for char in characters):
+						if any((char in linkpartlist[0]) for char in special):
+							continue
+					else:
+						if len(linkpartlist[0]) != 3:
+							log('invalid link: '+ link)
+							linkpartlist[0] = '[www'
+							link = 'http://'+linkpartlist[0]+'.'+linkpartlist[1]+'.'+linkpartlist[2]
+							log('should be: '+ link)
+							fixedlinks.append(link)
+
+				else:
+					printlog('invalid link: '+ link)
+					link = link.replace('[','')
+					link = '[http://'+link
+					log('should be: '+ link)
+					fixedlinks.append(link)
 			else:
-				log('invalid link: '+ link)
-				link = 'http://'+link
-				log('should be: '+ link)
-				fixedlinks.append(link)
+				linkpartlist = link.split('.')
+				print(linkpartlist)
+
+				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+					if any((char in linkpartlist[0]) for char in characters):
+						if any((char in linkpartlist[0]) for char in special):
+							continue
+					else:
+						if len(linkpartlist[0]) != 3:
+							log('invalid link: '+ link)
+							linkpartlist[0] == 'www'
+							link = 'http://'+linkpartlist[0]+'.'+linkpartlist[1]+'.'+linkpartlist[2]
+							log('should be: '+ link)
+							fixedlinks.append(link)
+
+				else:
+					log('invalid link: '+ link)
+					link = 'http://'+link
+					log('should be: '+ link)
+					fixedlinks.append(link)
 
 	printlog(str(errorcout)+' invalid links found')
 
@@ -56,5 +90,8 @@ def fixlink(article ,text):
 			saves = u"Bot has fixed links. "
 		elif errorcout == 1 and lang == 'en':
 			save = u"Bot has fixed link. "
+	elif errorcout == 0:
+		printlog('fixlinks no invalid links found: '+ article)
+		oldtext = text
 
 	return errorcout, text, saves, zeroedit
