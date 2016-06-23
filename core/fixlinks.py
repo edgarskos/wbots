@@ -32,9 +32,10 @@ def fixlink(article ,text):
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
 				print(linkpartlist)
-				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+				if '[' not in linkpartlist[0][0:1] and len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
 					if any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
+							log('special mark found getting out')
 							continue
 					else:
 						if len(linkpartlist[0]) != 3:
