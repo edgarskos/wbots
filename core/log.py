@@ -8,12 +8,12 @@ logfile = open('core/log/'+logfilename+'.log', 'a')
 def printlog(*log):
 	global time
 	global logfile
-	line = str(time)+' '+log[0]+'\n\n'
+	line = str(time)+' '+str(log[0])+'\n\n'
 	logfile.write(line)
-	print(time,log[0]+'\n')
+	print(time,str(log[0])+'\n')
 
 def log(*log):
 	global time
 	global logfile
-	line = str(time)+' '+log[0]+'\n\n'
+	line = str(time)+' '+str(log[0])+'\n\n'
 	logfile.write(line)

@@ -17,7 +17,7 @@ def fixlink(article ,text):
 	text = str(text)
 	oldtext = text
 	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()'
-	special = '!?*[]{}('
+	special = '!?*[]{}()'
 	printlog('fixlink testing site: '+ article)
 	soup = BeautifulSoup(text, "lxml")
 
@@ -32,16 +32,24 @@ def fixlink(article ,text):
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
 				print(linkpartlist)
-				if '[' not in linkpartlist[0][0:1] and len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
-					if any((char in linkpartlist[0]) for char in characters):
+				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+					if '[' not in linkpartlist[0][0:1] and any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
 							log('special mark found getting out')
 							continue
 					else:
 						if len(linkpartlist[0]) != 3:
 							log('invalid link: '+ link)
-							linkpartlist[0] = '[www'
-							link = 'http://'+linkpartlist[0]+'.'+linkpartlist[1]+'.'+linkpartlist[2]
+							linkpartlist[0] = 'www'
+							time = 0
+							finallink = ''
+							for item in linkpartlist:
+								time += 1
+								if time != len(linkpartlist):
+									finallink = finallink+item+'.'
+								else:
+									finallink = finallink+item
+							link = '[http://'+finallink
 							log('should be: '+ link)
 							fixedlinks.append(link)
 
@@ -53,7 +61,6 @@ def fixlink(article ,text):
 					fixedlinks.append(link)
 			else:
 				linkpartlist = link.split('.')
-				print(linkpartlist)
 
 				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
 					if any((char in linkpartlist[0]) for char in characters):
@@ -62,8 +69,16 @@ def fixlink(article ,text):
 					else:
 						if len(linkpartlist[0]) != 3:
 							log('invalid link: '+ link)
-							linkpartlist[0] == 'www'
-							link = 'http://'+linkpartlist[0]+'.'+linkpartlist[1]+'.'+linkpartlist[2]
+							linkpartlist[0] = 'www'
+							time = 0
+							finallink = ''
+							for item in linkpartlist:
+								time += 1
+								if time != len(linkpartlist):
+									finallink = finallink+item+'.'
+								else:
+									finallink = finallink+item
+							link = 'http://'+finallink
 							log('should be: '+ link)
 							fixedlinks.append(link)
 
@@ -76,7 +91,6 @@ def fixlink(article ,text):
 	printlog(str(errorcout)+' invalid links found')
 
 	for fixedlink, invalidlink in zip(fixedlinks, invalidlinks):
-		log(fixedlink, invalidlink)
 		i =  html.unescape(str(invalidlink))
 		f = html.unescape(str(fixedlink))
 		text = text.replace(i, f)
