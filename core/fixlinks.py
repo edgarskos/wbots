@@ -1,21 +1,19 @@
-import pywikibot
 from bs4 import BeautifulSoup
 from core.log import *
-from pywikibot import pagegenerators
 import html
 import sys
 import re
 from core.config import *
 
-def fixlink(article):
+def fixlink(article ,text):
 	if testmode == 1:
 		printlog('testmode')
 	errorcout = 0
+	saves = ''
+	zeroedit = 0
 	fixedlinks = []
 	invalidlinks = []
-	site = pywikibot.Site()
-	page = pywikibot.Page(site, article)
-	text = str(page.text)
+	text = str(text)
 	oldtext = text
 	printlog('fixlink testing site: '+ article)
 	soup = BeautifulSoup(text, "lxml")
@@ -29,21 +27,16 @@ def fixlink(article):
 			errorcout += 1
 			invalidlinks.append(link)
 			if '[' in link and ']' in  link:
-				log('invalid link: '+ link)
-				print('invalid link found')
+				printlog('invalid link: '+ link)
 				link = link.replace('[','')
 				link = '[http://'+link
 				log('should be: '+ link)
 				fixedlinks.append(link)
 			else:
 				log('invalid link: '+ link)
-				print('invalid link found')
 				link = 'http://'+link
 				log('should be: '+ link)
 				fixedlinks.append(link)
-
-		else:
-			log('valid link: '+ link)
 
 	printlog(str(errorcout)+' invalid links found')
 
@@ -53,13 +46,15 @@ def fixlink(article):
 		f = html.unescape(str(fixedlink))
 		text = text.replace(i, f)
 
-	if text != oldtext and testmode == 0:
-		page.text = text
-		if errorcout > 1:
-			page.save(u"Botti korjasi linkkejä.")
-		else:
-			page.save(u"Botti korjasi linkin.")
-	elif errorcout == 0:
-		printlog('no invalid links found: '+ article)
+	if text != oldtext:
+		zeroedit = 1
+		if errorcout > 1 and lang == 'fi':
+			saves = u"Botti korjasi linkkejä. "
+		elif errorcout == 1 and lang == 'fi':
+			save = u"Botti korjasi linkin. "
+		elif errorcout > 1 and lang == 'en':
+			saves = u"Bot has fixed links. "
+		elif errorcout == 1 and lang == 'en':
+			save = u"Bot has fixed link. "
 
-	return errorcout
+	return errorcout, text, saves, zeroedit

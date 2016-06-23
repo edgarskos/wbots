@@ -1,18 +1,17 @@
 import sys
 import re
 from core.config import *
-import pywikibot
 from core.log import *
 
 
-def fixpiped(article):
+def fixpiped(article ,text):
 	if testmode == 1:
 		printlog('testmode')
 	fixeditem = None
 	errorcout = 0
-	site = pywikibot.Site()
-	page = pywikibot.Page(site, article)
-	text = str(page.text)
+	saves = ''
+	zeroedit = 0
+	text = str(text)
 	oldtext = text
 	printlog('fixpiped testing site: '+ article)
 	searchtext = text.replace(' ', '_')
@@ -22,7 +21,6 @@ def fixpiped(article):
 		fixeditem = None
 		originalitem = item
 		if '|' in item:
-			print(item+' found')
 			item = item.replace('[', '').replace(']', '')
 			item = item.split('|')
 
@@ -35,5 +33,14 @@ def fixpiped(article):
 				print(fixeditem)
 				printlog(originalitem+'] --> '+fixeditem+']')
 				text = text.replace(str(originalitem), str(fixeditem))
+	if text != oldtext:
+		if errorcout > 1 and lang == 'fi':
+			saves = u'Botti poisti wikipedian sisäisistä linkeistä tekstin joissa se on sama kuin linkki. '
+		elif errorcout == 1 and lang == 'fi':
+			saves = u'Botti poisti wikipedian sisäisestä linkistä tekstin jossa se on sama kuin linkki. '
+		elif errorcout > 1 and lang == 'en':
+			saves = u"Bot has removed texts from pipedlinks because it's same as link. "
+		elif errorcout == 1 and lang == 'en':
+			saves = u"Bot has removed text from pipedlink because it's same as link. "
 
-	return errorcout
+	return errorcout, text, saves, zeroedit

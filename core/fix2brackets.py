@@ -1,17 +1,15 @@
-import pywikibot
 from core.log import *
-from pywikibot import pagegenerators
 import re
 from core.config import *
 
-def fix2brackets(article):
+def fix2brackets(article, text):
 	if testmode == 1:
 		printlog('testmode')
 	errorcout = 0
-	site = pywikibot.Site()
-	page = pywikibot.Page(site, article)
-	text = str(page.text)
+	text = str(text)
 	oldtext = text
+	saves = ''
+	zeroedit = 0
 	printlog('fix2brackets testing site: '+ article)
 	twobrackets = re.findall(r"\[(\S+)\]", text)
 	for item in twobrackets:
@@ -24,18 +22,21 @@ def fix2brackets(article):
 				log(olditem+' replaced with '+item)
 				text = text.replace(olditem, str(item))
 
-	if text != oldtext and testmode == 0:
-		page.text = text
-		if errorcout > 1:
-			page.save(u"Botti korjasi linkkejä.")
-		else:
-			page.save(u"Botti korjasi linkin.")
+	if text != oldtext:
+		zeroedit = 1
+		if errorcout > 1 and lang == 'fi':
+			saves = u"Botti poisti ylimääräiset [ ] ulkoisista linkeistä. "
+		elif errorcout == 1 and lang == 'fi':
+			saves = u"Botti poisti ylimääräiset [ ] ulkoisesta linkistä. "
+		elif errorcout > 1 and lang == 'en':
+			saves = u"Bot has removed excessive brackets from external links. "
+		elif errorcout == 1 and lang == 'en':
+			saves = u"Bot has removed excessive brackets from external link. "
+
 	elif errorcout == 0:
 		printlog('no invalid links found: '+ article)
+		oldtext = text
 
-	print()
 	printlog('done')
 
-	if text != oldtext and testmode == 1:
-		log(text)
-	return errorcout
+	return errorcout, text, saves, zeroedit
