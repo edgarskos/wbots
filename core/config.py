@@ -1,2 +1,2 @@
-testmode = 1
+testmode = 0
 lang = 'fi'
