@@ -6,3 +6,4 @@ pywikibot.lwp
 *.pyc
 *.log
 *.lfb
+/test.py
