@@ -6,18 +6,19 @@ import sys
 sys.path.append('core/libs/')
 import pywikibot
 from pywikibot import pagegenerators
-from core.fixlinks import fixlink
+from core.fixreflinks import fixreflink
 from core.fix2brackets import fix2brackets
 from core.fixpiped import fixpiped
 from core.log import *
 from core.config import *
+from core.fixblinks import fixblink
 try:
 	def main():
 		fixcout = 0
 		zeroedit = 1
-		saves = ''
 		articles = open('core/db/articles.db', 'r')
 		for article in articles:
+			saves = ''
 			site = pywikibot.Site()
 			page = pywikibot.Page(site, article)
 			text = str(page.text)
@@ -32,11 +33,21 @@ try:
 			fixcout += infoback[0]
 			saves += infoback[2]
 			zeroedit -= infoback[3]
-			infoback = fixlink(article, text)
+			infoback = fixreflink(article, text)
 			text = infoback[1]
 			fixcout += infoback[0]
 			saves += infoback[2]
 			zeroedit -= infoback[3]
+			infoback = fixblink(article, text)
+			text = infoback[1]
+			fixcout += infoback[0]
+			saves += infoback[2]
+			zeroedit -= infoback[3]
+			
+			if testmode == 1:
+				printlog(saves)
+				if fixcout > 0:
+					log('found something')
 
 			if text != oldtext and zeroedit < 1 and testmode == 0:
 				page.text = text
