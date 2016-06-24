@@ -5,3 +5,4 @@ user-config.py
 pywikibot.lwp
 *.pyc
 *.log
+*.lfb
