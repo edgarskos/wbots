@@ -25,9 +25,9 @@ def fix2brackets(article, text):
 	if text != oldtext:
 		zeroedit = 1
 		if errorcout > 1 and lang == 'fi':
-			saves = u"Botti poisti ylimääräiset [ ] ulkoisista linkeistä. "
+			saves = u"Botti poisti ylimääräiset hakasulkeet ulkoisista linkeistä. "
 		elif errorcout == 1 and lang == 'fi':
-			saves = u"Botti poisti ylimääräiset [ ] ulkoisesta linkistä. "
+			saves = u"Botti poisti ylimääräiset hakasulkeet ulkoisesta linkistä. "
 		elif errorcout > 1 and lang == 'en':
 			saves = u"Bot has removed excessive brackets from external links. "
 		elif errorcout == 1 and lang == 'en':
