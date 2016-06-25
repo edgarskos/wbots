@@ -16,7 +16,7 @@ try:
 	def main():
 		fixcout = 0
 		zeroedit = 1
-		articles = open('core/db/articles.db', 'r')
+		articles = open('core/lfb/articles.lfb', 'r')
 		for article in articles:
 			saves = ''
 			site = pywikibot.Site()
