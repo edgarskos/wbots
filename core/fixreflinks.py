@@ -31,7 +31,6 @@ def fixreflink(article ,text):
 			errorcout += 1
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
-				print(linkpartlist)
 				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
 					if '[' not in linkpartlist[0][0:1] and any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
@@ -52,7 +51,6 @@ def fixreflink(article ,text):
 							link = '<ref>[http://'+finallink+'</ref>'
 							log('should be: '+ link)
 							printlog('adding '+ str(link))
-							print(orglink)
 							fixedlinks.append(link)
 							invalidlinks.append(orglink)
 
@@ -62,7 +60,6 @@ def fixreflink(article ,text):
 					link = '<ref>[http://'+link+'</ref>'
 					log('should be: '+ link)
 					printlog('adding '+ str(link))
-					print(orglink)
 					fixedlinks.append(link)
 					invalidlinks.append(orglink)
 			else:
@@ -87,7 +84,6 @@ def fixreflink(article ,text):
 							link = '<ref>http://'+finallink+'</ref>'
 							log('should be: '+ link)
 							printlog('adding '+ str(link))
-							print(orglink)
 							fixedlinks.append(link)
 							invalidlinks.append(orglink)
 
@@ -96,7 +92,6 @@ def fixreflink(article ,text):
 					link = '<ref>http://'+link+'</ref>'
 					log('should be: '+ link)
 					printlog('adding '+ str(link))
-					print(orglink)
 					fixedlinks.append(link)
 					invalidlinks.append(orglink)
 
