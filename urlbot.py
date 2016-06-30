@@ -4,6 +4,7 @@
 import sys
 #path append
 sys.path.append('core/libs/')
+#import core and libs
 import pywikibot
 from pywikibot import pagegenerators
 from core.fixreflinks import fixreflink
@@ -16,7 +17,9 @@ try:
 	def main():
 		fixcout = 0
 		zeroedit = 1
+		#list of articles
 		articles = open('core/lfb/articles.lfb', 'r')
+		#check article
 		for article in articles:
 			saves = ''
 			site = pywikibot.Site()
@@ -48,7 +51,8 @@ try:
 				printlog(saves)
 				if fixcout > 0:
 					log('found something')
-
+			
+			#write changes
 			if text != oldtext and zeroedit < 1 and testmode == 0:
 				page.text = text
 				page.save(saves)
