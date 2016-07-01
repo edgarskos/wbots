@@ -17,8 +17,14 @@ try:
 	def main():
 		fixcout = 0
 		zeroedit = 1
+		filename = input('list for bots file name: ')
+		filenamef = 'core/lfb/'+filename+'.lfb'
 		#list of articles
-		articles = open('core/lfb/articles.lfb', 'r')
+		try:
+			articles = open(filenamef, 'r')
+		except FileNotFoundError:
+			print('error: file not found')
+			main()
 		#check article
 		for article in articles:
 			saves = ''
