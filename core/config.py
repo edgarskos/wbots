@@ -1,3 +1,3 @@
 #config file
-testmode = 0
+testmode = 1
 lang = 'fi'
