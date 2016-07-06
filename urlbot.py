@@ -2,6 +2,7 @@
 
 #import built in modules
 import sys
+from glob import glob
 #path append
 sys.path.append('core/libs/')
 #import core and libs
@@ -24,6 +25,11 @@ try:
 			articles = open(filenamef, 'r')
 		except FileNotFoundError:
 			print('error: file not found')
+			listfiles = glob('core/lfb/*.lfb')
+			print('\navailable lists:\n')
+			for item in listfiles:
+				print(item.replace('core/lfb/', '').replace('.lfb', ''))
+			print()
 			main()
 		#check article
 		for article in articles:
