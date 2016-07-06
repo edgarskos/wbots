@@ -16,7 +16,7 @@ def fixreflink(article ,text):
 	invalidlinks = []
 	text = str(text)
 	oldtext = text
-	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()'
+	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()0123456789'
 	special = '!?*[]{}()'
 	printlog('fixreflink testing site: '+ article)
 	soup = BeautifulSoup(text, "lxml")
