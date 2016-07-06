@@ -15,7 +15,7 @@ def fixblink(article ,text):
 	invalidlinks = []
 	text = str(text)
 	oldtext = text
-	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()'
+	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()0123456789'
 	special = '!?*[]{}()'
 	printlog('fixblink testing site: '+ article)
 	twobrackets = re.findall(r"\[(\S+)\]", text)
