@@ -13,7 +13,7 @@ def fix2brackets(article, text):
 	printlog('fix2brackets testing site: '+ article)
 	twobrackets = re.findall(r"\[(\S+)\]", text)
 	for item in twobrackets:
-		if '[' in item:
+		if '[' in item and '|' not item:
 			if 'https://' in item or 'http://' in item:
 				errorcout += 1
 				print('invalid link found')
