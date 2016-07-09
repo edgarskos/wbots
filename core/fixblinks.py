@@ -26,7 +26,7 @@ def fixblink(article ,text):
 			errorcout += 1
 			linkpartlist = link.split('.')
 
-			if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+			if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
 				if any((char in linkpartlist[0]) for char in characters):
 					if any((char in linkpartlist[0]) for char in special):
 						continue
@@ -46,6 +46,8 @@ def fixblink(article ,text):
 						log('should be: '+ link)
 						fixedlinks.append(link)
 						invalidlinks.append(link)
+					else:
+						printlog('www fix error')
 
 			else:
 				log('invalid link: '+ link)
