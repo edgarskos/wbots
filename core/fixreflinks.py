@@ -31,7 +31,7 @@ def fixreflink(article ,text):
 			errorcout += 1
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
-				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
 					if '[' not in linkpartlist[0][0:1] and any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
 							log('special mark found getting out')
@@ -50,22 +50,22 @@ def fixreflink(article ,text):
 									finallink = finallink+item
 							link = '<ref>[http://'+finallink+'</ref>'
 							log('should be: '+ link)
-							printlog('adding '+ str(link))
 							fixedlinks.append(link)
 							invalidlinks.append(orglink)
+						else:
+							printlog('www fix error')
 
 				else:
 					printlog('invalid link: '+ orglink)
 					link = link.replace('[','')
 					link = '<ref>[http://'+link+'</ref>'
 					log('should be: '+ link)
-					printlog('adding '+ str(link))
 					fixedlinks.append(link)
 					invalidlinks.append(orglink)
 			else:
 				linkpartlist = link.split('.')
 
-				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0]:
+				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
 					if any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
 							continue
@@ -83,15 +83,16 @@ def fixreflink(article ,text):
 									finallink = finallink+item
 							link = '<ref>http://'+finallink+'</ref>'
 							log('should be: '+ link)
-							printlog('adding '+ str(link))
 							fixedlinks.append(link)
 							invalidlinks.append(orglink)
+
+						else:
+							printlog('www fix error')
 
 				else:
 					log('invalid link: '+ orglink)
 					link = '<ref>http://'+link+'</ref>'
 					log('should be: '+ link)
-					printlog('adding '+ str(link))
 					fixedlinks.append(link)
 					invalidlinks.append(orglink)
 
