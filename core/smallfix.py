@@ -29,7 +29,7 @@ def smallfix(article, text):
 			saves = u"Bot has fixed small tag syntax. "
 
 	elif errorcout == 0:
-		printlog('smallfix no invalid links found: '+ article)
+		printlog('smallfix no invalid tags found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
