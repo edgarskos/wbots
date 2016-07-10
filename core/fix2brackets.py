@@ -11,16 +11,31 @@ def fix2brackets(article, text):
 	saves = ''
 	zeroedit = 0
 	printlog('fix2brackets testing site: '+ article)
-	twobrackets = re.findall(r"\[(\S+)\]", text)
+	twobrackets = re.findall(r"\[(.*?)\]", text)
 	for item in twobrackets:
-		if '[' in item and '|' not in item:
+		location = text.index(item)
+		if '[' in item:
 			if 'https://' in item or 'http://' in item:
-				errorcout += 1
-				print('invalid link found')
-				log('found link with two brackets: '+ item)
-				olditem = '['+str(item)+']'
-				log(olditem+' replaced with '+item)
-				text = text.replace(olditem, str(item))
+				if '|' not in text[location-3:location]:
+					errorcout += 1
+					print('invalid link found')
+					location = text.index(item)+len(item)
+					if ']' in text[location+1:location+2]:
+
+						olditem = '['+str(item)+']]'
+						item = item.replace('[', '')
+						item = '['+item+']'
+						log(olditem+' replaced with '+item)
+						text = text.replace(olditem, str(item))
+					else:
+						olditem = '['+str(item)+']'
+						item = item.replace('[', '')
+						item = '['+item+']'
+						log(olditem+' replaced with '+item)
+						text = text.replace(olditem, str(item))
+				else:
+					printlog('found problem: '+ article)
+					printlog(item)
 
 	if text != oldtext:
 		zeroedit = 1
@@ -36,7 +51,5 @@ def fix2brackets(article, text):
 	elif errorcout == 0:
 		printlog('fix2brackets no invalid links found: '+ article)
 		oldtext = text
-
-	printlog('done')
 
 	return errorcout, text, saves, zeroedit
