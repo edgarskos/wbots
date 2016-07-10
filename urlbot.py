@@ -1,23 +1,34 @@
 #! /usr/bin/env python3
 
-#import built in modules
-import sys
-from glob import glob
-#path append
-sys.path.append('core/libs/')
-#import core and libs
-import pywikibot
-from pywikibot import pagegenerators
-from core.fixreflinks import fixreflink
-from core.fix2brackets import fix2brackets
-from core.fixpiped import fixpiped
-from core.log import *
-from core.config import *
-from core.fixblinks import fixblink
 try:
+	#import built in modules
+	import sys
+	from glob import glob
+	import datetime
+	#path append
+	sys.path.append('core/libs/')
+	#import core and libs
+	import pywikibot
+	from pywikibot import pagegenerators
+	from core.fixreflinks import fixreflink
+	from core.fix2brackets import fix2brackets
+	from core.fixpiped import fixpiped
+	from core.log import *
+	from core.config import *
+	from core.fixblinks import fixblink
+	from core.twovlines import twovlines
+	from core.brfix import brfix
+	from core.centerfix import centerfix
+	from core.smallfix import smallfix
+
 	def main():
+		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
+		if testmode == 0:
+			print('test mode disabled\n')
+		else:
+			print('test mode enabled\n')
 		filename = input('list for bots file name: ')
 		filenamef = 'core/lfb/'+filename+'.lfb'
 		#list of articles
@@ -36,7 +47,10 @@ try:
 			saves = ''
 			site = pywikibot.Site()
 			page = pywikibot.Page(site, article)
-			text = str(page.text)
+			try:
+				text = str(page.text)
+			except pywikibot.exceptions.InvalidTitle:
+				continue
 			oldtext = text
 			infoback = fix2brackets(article, text)
 			text = infoback[1]
@@ -58,6 +72,26 @@ try:
 			fixcout += infoback[0]
 			saves += infoback[2]
 			zeroedit -= infoback[3]
+			infoback = twovlines(article, text)
+			text = infoback[1]
+			fixcout += infoback[0]
+			saves += infoback[2]
+			zeroedit -= infoback[3]
+			infoback = brfix(article, text)
+			text = infoback[1]
+			fixcout += infoback[0]
+			saves += infoback[2]
+			zeroedit -= infoback[3]
+			infoback = centerfix(article, text)
+			text = infoback[1]
+			fixcout += infoback[0]
+			saves += infoback[2]
+			zeroedit -= infoback[3]
+			infoback = smallfix(article, text)
+			text = infoback[1]
+			fixcout += infoback[0]
+			saves += infoback[2]
+			zeroedit -= infoback[3]
 			
 			if testmode == 1:
 				printlog(saves)
@@ -72,6 +106,9 @@ try:
 			if text != oldtext and zeroedit == 1:
 				printlog("bot didn't make changes to "+article+ " because zeroedit")
 		printlog('fixcout: '+str(fixcout))
+		stop_time = datetime.datetime.now()
+		total_time = stop_time - start_time
+		printlog("scan duration: "+str(total_time))
 
 	if __name__ == '__main__':
 		main()
