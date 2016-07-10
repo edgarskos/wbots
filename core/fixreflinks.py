@@ -37,7 +37,7 @@ def fixreflink(article ,text):
 							log('special mark found getting out')
 							continue
 					else:
-						if len(linkpartlist[0]) != 3:
+						if len(linkpartlist[0]) != 3 or '[' in linkpartlist[0]:
 							log('invalid link: '+ orglink)
 							linkpartlist[0] = 'www'
 							time = 0
@@ -53,7 +53,7 @@ def fixreflink(article ,text):
 							fixedlinks.append(link)
 							invalidlinks.append(orglink)
 						else:
-							printlog('www fix error')
+							printlog('www fix error: '+ str(linkpartlist))
 
 				else:
 					printlog('invalid link: '+ orglink)
@@ -70,6 +70,7 @@ def fixreflink(article ,text):
 						if any((char in linkpartlist[0]) for char in special):
 							continue
 					else:
+						print(linkpartlist[0])
 						if len(linkpartlist[0]) != 3:
 							log('invalid link: '+ orglink)
 							linkpartlist[0] = 'www'
@@ -87,7 +88,7 @@ def fixreflink(article ,text):
 							invalidlinks.append(orglink)
 
 						else:
-							printlog('www fix error')
+							printlog('www fix error: '+ str(linkpartlist))
 
 				else:
 					log('invalid link: '+ orglink)
@@ -98,7 +99,7 @@ def fixreflink(article ,text):
 
 	printlog(str(errorcout)+' invalid links found')
 
-	print(str(fixedlinks)+'\n\n'+ str(invalidlinks))
+
 
 	for fixedlink, invalidlink in zip(fixedlinks, invalidlinks):
 		i =  html.unescape(str(invalidlink))
