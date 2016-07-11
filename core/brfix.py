@@ -3,15 +3,12 @@ import re
 from core.config import *
 
 def brfix(article, text):
-	if testmode == 1:
-		printlog('testmode')
 	errorcout = 0
 	text = str(text)
 	oldtext = text
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	printlog('brfix testing site: '+ article)
 	errorcout += text.count('< br >')+text.count('< br>')+text.count('<br >')+text.count('</br>')+text.count('< /br >')+text.count('< /br>')+text.count('</br >')+text.count('< br />')+text.count('< br/>')+text.count('<br/ >')+text.count('< br/ >')
 	errorcout += text.count('<br clear="all">')+text.count('< br clear="all" >')+text.count('<br clear="all" >')+text.count('< br clear="all">')+text.count('<br clear="all" />')+text.count('< br clear="all" />')+text.count('< br clear="all"/>')+text.count('<br clear="all"/>')
 	errorcout += text.count('<br clear=all>')+text.count('< br clear=all >')+text.count('<br clear=all >')+text.count('< br clear=all>')+text.count('<br clear=all />')+text.count('< br clear=all />')+text.count('< br clear=all/>')+text.count('<br clear=all/>')
@@ -38,17 +35,18 @@ def brfix(article, text):
 
 	if text != oldtext:
 		zeroedit = 1
+		printlog('brfix invalid tags found: '+ article)
 		if errorcout > 1 and lang == 'fi':
-			saves = u"Botti korjasi br tagien syntaksit tai korvasi ne {{clear}} mallineella. "
+			saves = u"Botti korjasi br tagien syntaksit tai korvasi ne {{clear}} mallinnella. "
 		elif errorcout == 1 and lang == 'fi':
-			saves = u"Botti korjasi br tagin syntaksin tai korvasi sen {{clear}} mallineella. "
+			saves = u"Botti korjasi br tagin syntaksin tai korvasi sen {{clear}} mallinnella. "
 		elif errorcout > 1 and lang == 'en':
 			saves = u"Bot has fixed br tags syntaxes or did replace it with {{clear}}. "
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed br tag syntax or did replace it with {{clear}}. "
 
 	elif errorcout == 0:
-		printlog('brfix no invalid tags found: '+ article)
+		printlog('brfix invalid tags not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit

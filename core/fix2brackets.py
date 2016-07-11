@@ -3,14 +3,11 @@ import re
 from core.config import *
 
 def fix2brackets(article, text):
-	if testmode == 1:
-		printlog('testmode')
 	errorcout = 0
 	text = str(text)
 	oldtext = text
 	saves = ''
 	zeroedit = 0
-	printlog('fix2brackets testing site: '+ article)
 	twobrackets = re.findall(r"\[(.*?)\]", text)
 	for item in twobrackets:
 		location = text.index(item)
@@ -18,20 +15,19 @@ def fix2brackets(article, text):
 			if 'https://' in item or 'http://' in item:
 				if '|' not in text[location-3:location]:
 					errorcout += 1
-					print('invalid link found')
 					location = text.index(item)+len(item)
 					if ']' in text[location+1:location+2]:
 
 						olditem = '['+str(item)+']]'
 						item = item.replace('[', '')
 						item = '['+item+']'
-						log(olditem+' replaced with '+item)
+						log('fix2brackets: '+article+'\n'+olditem+' --> '+item)
 						text = text.replace(olditem, str(item))
 					else:
 						olditem = '['+str(item)+']'
 						item = item.replace('[', '')
 						item = '['+item+']'
-						log(olditem+' replaced with '+item)
+						log('fix2brackets: '+article+'\n'+olditem+' --> '+item)
 						text = text.replace(olditem, str(item))
 				else:
 					printlog('found problem: '+ article)
@@ -49,7 +45,7 @@ def fix2brackets(article, text):
 			saves = u"Bot has removed excessive brackets from external link. "
 
 	elif errorcout == 0:
-		printlog('fix2brackets no invalid links found: '+ article)
+		printlog('fix2brackets invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit

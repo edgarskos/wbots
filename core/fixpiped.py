@@ -5,15 +5,11 @@ from core.log import *
 
 
 def fixpiped(article ,text):
-	if testmode == 1:
-		printlog('testmode')
-	fixeditem = None
 	errorcout = 0
 	saves = ''
 	zeroedit = 0
 	text = str(text)
 	oldtext = text
-	printlog('fixpiped testing site: '+ article)
 	searchtext = text.replace(' ', '_')
 	twobrackets = re.findall(r"\[(\S+?)\]", searchtext )
 
@@ -30,8 +26,7 @@ def fixpiped(article ,text):
 			if fixeditem != None:
 				errorcout += 1
 				originalitem = originalitem.replace('_', ' ')
-				print(fixeditem)
-				printlog(originalitem+'] --> '+fixeditem+']')
+				printlog('fixpiped invalid links found: '+article+'\n'+originalitem+'] --> '+fixeditem+']')
 				text = text.replace(str(originalitem), str(fixeditem))
 	if text != oldtext:
 		if errorcout > 1 and lang == 'fi':
@@ -44,7 +39,7 @@ def fixpiped(article ,text):
 			saves = u"Bot has removed text from pipedlink because it's same as link. "
 
 	elif errorcout == 0:
-		printlog('fixpiped no invalid links found: '+ article)
+		printlog('fixpiped invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit

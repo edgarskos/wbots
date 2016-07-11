@@ -5,8 +5,6 @@ import re
 from core.config import *
 
 def fixblink(article ,text):
-	if testmode == 1:
-		printlog('testmode')
 	errorcout = 0
 	saves = ''
 	zeroedit = 0
@@ -17,12 +15,11 @@ def fixblink(article ,text):
 	oldtext = text
 	characters = 'abcdefghijklmnopqrstuvxyzäöABCDEFGHIJKLMNOPQRSTUVXYZŽÄÖ!?*[]{}()0123456789'
 	special = '!?*[]{}()'
-	printlog('fixblink testing site: '+ article)
 	twobrackets = re.findall(r"\[(\S+)\]", text)
 	for hit in twobrackets:
 		link = str(hit)
 		matches = re.search(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', link)
-		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '[' not in link:
+		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '[' not in link and '{' not in link[0:2]:
 			errorcout += 1
 			linkpartlist = link.split('.')
 
@@ -32,7 +29,6 @@ def fixblink(article ,text):
 						continue
 				else:
 					if len(linkpartlist[0]) != 3:
-						log('invalid link: '+ link)
 						linkpartlist[0] = 'www'
 						time = 0
 						finallink = ''
@@ -43,20 +39,17 @@ def fixblink(article ,text):
 							else:
 								finallink = finallink+item
 						link = '[http://'+finallink+']'
-						log('should be: '+ link)
+						log('fixblink invalid link found: '+article+'\n'+orglink+' --> '+link)
 						fixedlinks.append(link)
 						invalidlinks.append(link)
 					else:
 						printlog('www fix error')
 
 			else:
-				log('invalid link: '+ link)
 				link = '[http://'+link+']'
-				log('should be: '+ link)
+				log('fixblink invalid link found: '+article+'\n'+orglink+' --> '+link)
 				fixedlinks.append(link)
 				invalidlinks.append(link)
-
-	printlog(str(errorcout)+' invalid links found')
 
 	for fixedlink, invalidlink in zip(fixedlinks, invalidlinks):
 		i = html.unescape(str(invalidlink))
@@ -66,6 +59,7 @@ def fixblink(article ,text):
 
 	if text != oldtext:
 		zeroedit = 1
+		printlog(str(errorcout)+' invalid links found')
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi linkkejä. "
 		elif errorcout == 1 and lang == 'fi':
@@ -75,7 +69,7 @@ def fixblink(article ,text):
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed link. "
 	elif errorcout == 0:
-		printlog('fixlinks no invalid links found: '+ article)
+		printlog('fixlinks invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit

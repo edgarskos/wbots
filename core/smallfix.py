@@ -3,15 +3,12 @@ import re
 from core.config import *
 
 def smallfix(article, text):
-	if testmode == 1:
-		printlog('testmode')
 	errorcout = 0
 	text = str(text)
 	oldtext = text
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	printlog('smallfix testing site: '+ article)
 	errorcout = text.count('<small/>')+text.count('< small/>')+text.count('<small />')+text.count('< small />')+text.count('</ small >')+text.count('</small >')+text.count('</ small>')
 
 	text = text.replace('<small/>', '</small>').replace('< small />', '</small>').replace('< small/>', '</small>').replace('<small />', '</small>')
@@ -19,6 +16,7 @@ def smallfix(article, text):
 	
 	if text != oldtext:
 		zeroedit = 1
+		printlog('smallfix invalid tags found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi small tagien syntaksit. "
 		elif errorcout == 1 and lang == 'fi':
@@ -29,7 +27,7 @@ def smallfix(article, text):
 			saves = u"Bot has fixed small tag syntax. "
 
 	elif errorcout == 0:
-		printlog('smallfix no invalid tags found: '+ article)
+		printlog('smallfix invalid tags not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
