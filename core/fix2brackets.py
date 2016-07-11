@@ -11,7 +11,7 @@ def fix2brackets(article, text):
 	twobrackets = re.findall(r"\[(.*?)\]", text)
 	for item in twobrackets:
 		location = text.index(item)
-		if '[' in item:
+		if '[' in item[0:2]:
 			if 'https://' in item or 'http://' in item:
 				if '|' not in text[location-3:location]:
 					errorcout += 1
