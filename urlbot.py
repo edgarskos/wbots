@@ -22,6 +22,7 @@ try:
 	from core.smallfix import smallfix
 
 	def main():
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix']
 		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
@@ -52,46 +53,14 @@ try:
 			except pywikibot.exceptions.InvalidTitle:
 				continue
 			oldtext = text
-			infoback = fix2brackets(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = fixpiped(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = fixreflink(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = fixblink(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = twovlines(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = brfix(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = centerfix(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
-			infoback = smallfix(article, text)
-			text = infoback[1]
-			fixcout += infoback[0]
-			saves += infoback[2]
-			zeroedit -= infoback[3]
+
+			for method in methods:
+				func = globals()[method]
+				infoback = func(article, text)
+				text = infoback[1]
+				fixcout += infoback[0]
+				saves += infoback[2]
+				zeroedit -= infoback[3]
 			
 			if testmode == 1:
 				printlog(saves)
@@ -108,7 +77,7 @@ try:
 		printlog('fixcout: '+str(fixcout))
 		stop_time = datetime.datetime.now()
 		total_time = stop_time - start_time
-		printlog("scan duration: "+str(total_time))
+		printlog("bot duration: "+str(total_time))
 
 	if __name__ == '__main__':
 		main()
