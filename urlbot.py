@@ -20,9 +20,10 @@ try:
 	from core.brfix import brfix
 	from core.centerfix import centerfix
 	from core.smallfix import smallfix
+	from core.typofix import typofix
 
 	def main():
-		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix']
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix']
 		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
