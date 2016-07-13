@@ -21,9 +21,10 @@ try:
 	from core.centerfix import centerfix
 	from core.smallfix import smallfix
 	from core.typofix import typofix
+	from core.fixreflist import fixreflist
 
 	def main():
-		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix']
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'fixreflist']
 		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
@@ -64,7 +65,8 @@ try:
 				zeroedit -= infoback[3]
 			
 			if testmode == 1:
-				printlog(saves)
+				if saves != '':
+					printlog(saves)
 				if fixcout > 0:
 					log('found something')
 			
