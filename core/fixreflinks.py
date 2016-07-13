@@ -24,7 +24,7 @@ def fixreflink(article ,text):
 		orglink = link
 		link = link.replace('<ref>', '').replace('</ref>', '')
 		matches = re.search(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', link)
-		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '{' not in link[0:2]:
+		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '{' not in link[0:2] and '[' not in link[1:2] and 'ftp://' not in link and "'" not in link[0:2]:
 			errorcout += 1
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
