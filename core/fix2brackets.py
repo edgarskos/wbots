@@ -12,7 +12,7 @@ def fix2brackets(article, text):
 	for item in twobrackets:
 		location = text.index(item)
 		if '[' in item[0:2]:
-			if 'https://' in item or 'http://' in item:
+			if 'https://' in item or 'http://' in item and 'Tiedosto:' not in item and 'Kuva:' not in item and 'File:' not in item and 'Image:' not in file:
 				if '|' not in text[location-3:location]:
 					errorcout += 1
 					location = text.index(item)+len(item)
