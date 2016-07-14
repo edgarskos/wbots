@@ -10,7 +10,7 @@ def twovlines(article, text):
 	zeroedit = 0
 	brackets = re.findall(r"\[(.*?)\]", text)
 	for item in brackets:
-		if '||' in item:
+		if '||' in item and 'Kuva:' not in item and 'Tiedosto:' not in item and 'Image:' not in item and 'File:' not in item:
 			errorcout += 1
 			olditem = '['+item+']]'
 			item = '['+item+']]'
@@ -21,6 +21,7 @@ def twovlines(article, text):
 
 	if text != oldtext:
 		zeroedit = 1
+		printlog('fixvlines invalid links found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti poisti ylimääräiset pystyviivat linkeistä. "
 		elif errorcout == 1 and lang == 'fi':
@@ -31,7 +32,7 @@ def twovlines(article, text):
 			saves = u"Bot has removed excessive vertical lines from links. "
 
 	elif errorcout == 0:
-		printlog('fix2brackets invalid links not found: '+ article)
+		printlog('fixvlines invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
