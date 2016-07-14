@@ -12,8 +12,8 @@ def fix2brackets(article, text):
 	for item in twobrackets:
 		location = text.index(item)
 		if '[' in item[0:2]:
-			if 'https://' in item or 'http://' in item and 'Tiedosto:' not in item and 'Kuva:' not in item and 'File:' not in item and 'Image:' not in file:
-				if '|' not in text[location-3:location]:
+			if 'https://' in item[0:10] or 'http://' in item[0:10]:
+				if 'Tiedosto:' not in item and 'Kuva:' not in item and 'File:' not in item and 'Image:' not in item:
 					errorcout += 1
 					location = text.index(item)+len(item)
 					if ']' in text[location+1:location+2]:
@@ -29,12 +29,10 @@ def fix2brackets(article, text):
 						item = '['+item+']'
 						log('fix2brackets: '+article+'\n'+olditem+' --> '+item)
 						text = text.replace(olditem, str(item))
-				else:
-					printlog('found problem: '+ article)
-					printlog(item)
 
 	if text != oldtext:
 		zeroedit = 1
+		printlog('fix2brackets invalid links found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti poisti ylimääräiset hakasulkeet ulkoisista linkeistä. "
 		elif errorcout == 1 and lang == 'fi':
