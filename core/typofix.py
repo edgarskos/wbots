@@ -12,7 +12,8 @@ def typofix(article, text):
 	saves = ''
 	zeroedit = 0
 
-	text = topy.fixtypo(text)
+	if text != '':
+		text = topy.fixtypo(text)
 	
 	if text != oldtext:
 		errorcout += 1
