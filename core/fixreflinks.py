@@ -107,7 +107,7 @@ def fixreflink(article ,text):
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed link. "
 	elif errorcout == 0:
-		printlog('fixlinks invalid links not found: '+ article)
+		printlog('fixreflinks invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
