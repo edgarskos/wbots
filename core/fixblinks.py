@@ -20,6 +20,7 @@ def fixblink(article ,text):
 		link = str(hit)
 		matches = re.search(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', link)
 		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '[' not in link and '{' not in link[0:2]:
+			orglink = '['+link+']'
 			errorcout += 1
 			linkpartlist = link.split('.')
 
@@ -40,8 +41,9 @@ def fixblink(article ,text):
 								finallink = finallink+item
 						link = '[http://'+finallink+']'
 						log('fixblink invalid link found: '+article+'\n'+orglink+' --> '+link)
+						text = text.replace(orglink, link)
 						fixedlinks.append(link)
-						invalidlinks.append(link)
+						invalidlinks.append(orglink)
 					else:
 						printlog('www fix error')
 
@@ -49,13 +51,10 @@ def fixblink(article ,text):
 				link = '[http://'+link+']'
 				log('fixblink invalid link found: '+article+'\n'+orglink+' --> '+link)
 				fixedlinks.append(link)
-				invalidlinks.append(link)
+				invalidlinks.append(orglink)
+				text = text.replace(orglink, link)
 
-	for fixedlink, invalidlink in zip(fixedlinks, invalidlinks):
-		i = html.unescape(str(invalidlink))
-		i = '['+i+']'
-		f = html.unescape(str(fixedlink))
-		text = text.replace(i, f)
+	
 
 	if text != oldtext:
 		zeroedit = 1
@@ -69,7 +68,7 @@ def fixblink(article ,text):
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed link. "
 	elif errorcout == 0:
-		printlog('fixlinks invalid links not found: '+ article)
+		printlog('fixblinks invalid links not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
