@@ -54,6 +54,9 @@ try:
 				text = str(page.text)
 			except pywikibot.exceptions.InvalidTitle:
 				continue
+			if text == '':
+				printlog("this page is empty or it doesn't exist")
+				continue
 			oldtext = text
 
 			for method in methods:
