@@ -54,57 +54,64 @@ def fixreflist(article, text):
 			addreferences = 0
 			endposition = 0
 			foundlist = 0
-			for line in text.split('\n'):
-				if '==Viitteet==' in line or '==Lähteet==' in line or '== Viitteet ==' in line or '== Lähteet ==' in line:
+			foundpos = 0
+			for line in reversed(text.split('\n')):
+				if '==Viitteet==' in line or '==Lähteet==' in line or '== Viitteet ==' in line or '===Viitteet===' in line or '=== Viitteet ===' in line or '== Lähteet ==' in line:
 					startposition = text.rfind(line)
 					if line == '==Viitteet==':
 						endposition = startposition + 12
+						break
 					elif line == '== Viitteet ==':
 						endposition = startposition + 14
+						break
 					elif line == '===Viitteet===':
 						endposition = startposition + 14
+						break
 					elif line == '=== Viitteet ===':
 						endposition = startposition + 16
+						break
 					elif line == '==Lähteet==':
 						addreferences = 1
 						endposition = startposition + 11
+						break
 					elif line == '== Lähteet ==':
 						addreferences = 1
 						endposition = startposition + 13
-					if endposition != 0:
-						if '*' in text[endposition:endposition+3]:
-							lastposition = 0
-							lastlen = 0
-							for line in text[endposition:].split('\n'):
-								if '*' in line:
-									foundlist = 1
-									lastposition = text[endposition:].find(line)
-									lastlen = len(line)
-								if '*' not in line and lastlen != 0 and lastposition != 0:
-									if addreferences == 1 and foundlist == 1:
-										endposition = endposition + lastposition + lastlen
-										text_data = list(text)
-										text_data.insert(endposition, '\n\n===Viitteet===\n{{viitteet}}\n')
-										text = ''.join(text_data)
-										errorcout += 1
-										error = 1
-										break
+						break
+			if endposition != 0:
+				if '*' in text[endposition:endposition+3] or '{{Commons' in text[endposition:endposition+11]:
+					lastposition = 0
+					lastlen = 0
+					for line in text[endposition:].split('\n'):
+						if '*' in line or '{{Commons' in line:
+							foundlist = 1
+							lastposition = text[endposition:].find(line)
+							lastlen = len(line)
+						if '*' not in line and lastlen != 0 and lastposition != 0:
+							if addreferences == 1 and foundlist == 1:
+								endposition = endposition + lastposition + lastlen
+								text_data = list(text)
+								text_data.insert(endposition, '\n\n===Viitteet===\n{{viitteet}}\n')
+								text = ''.join(text_data)
+								errorcout += 1
+								error = 1
+								break
 
-									else:
-										endposition = endposition + lastposition + lastlen
-										text_data = list(text)
-										text_data.insert(endposition, '\n{{viitteet}}')
-										text = ''.join(text_data)
-										errorcout += 1
-										error = 2
-										break
+							else:
+								endposition = endposition + lastposition + lastlen
+								text_data = list(text)
+								text_data.insert(endposition, '\n{{viitteet}}')
+								text = ''.join(text_data)
+								errorcout += 1
+								error = 2
+								break
 
-						else:
-							text_data = list(text)
-							text_data.insert(endposition, '\n{{viitteet}}')
-							text = ''.join(text_data)
-							errorcout += 1
-							error = 2
+				else:
+					text_data = list(text)
+					text_data.insert(endposition, '\n{{viitteet}}')
+					text = ''.join(text_data)
+					errorcout += 1
+					error = 2
 
 
 	if text != oldtext:
