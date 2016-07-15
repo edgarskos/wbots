@@ -76,7 +76,12 @@ try:
 			#write changes
 			if text != oldtext and zeroedit < 1 and testmode == 0:
 				page.text = text
-				page.save(saves)
+				try:
+					page.save(saves)
+				except pywikibot.exceptions.OtherPageSaveError:
+					printlog('cannot save article: '+article+' because bots are not allowed')
+					continue
+
 				printlog(saves)
 			if text != oldtext and zeroedit == 1:
 				printlog("bot didn't make changes to "+article+ " because zeroedit")
