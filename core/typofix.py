@@ -18,14 +18,14 @@ def typofix(article, text):
 	if text != oldtext:
 		errorcout += 1
 		zeroedit = 1
-		printlog('typofix typos found: '+ article)
+		printlog('typofix error found: '+ article)
 		if errorcout == 1 and lang == 'fi':
 			saves = u"Botti korjasi typon. "
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed typo. "
 
 	elif errorcout == 0:
-		printlog('typofix typos not found: '+ article)
+		printlog('typofix error not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
