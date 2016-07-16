@@ -58,6 +58,7 @@ def fixblink(article ,text):
 
 	if text != oldtext:
 		zeroedit = 1
+		printlog('fixblinks error found: '+ article)
 		printlog(str(errorcout)+' invalid links found')
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi linkkejä. "
@@ -68,7 +69,7 @@ def fixblink(article ,text):
 		elif errorcout == 1 and lang == 'en':
 			saves = u"Bot has fixed link. "
 	elif errorcout == 0:
-		printlog('fixblinks invalid links not found: '+ article)
+		printlog('fixblinks error not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
