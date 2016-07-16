@@ -24,7 +24,7 @@ try:
 	from core.fixreflist import fixreflist
 
 	def main():
-		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'fixreflist']
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix']
 		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
