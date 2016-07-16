@@ -9,14 +9,22 @@ def centerfix(article, text):
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	errorcout = text.count('<center/>')+text.count('< center/>')+text.count('<center />')+text.count('< center />')+text.count('</ center >')+text.count('</center >')+text.count('</ center>')
 
-	text = text.replace('<center/>', '</center>').replace('< center />', '</center>').replace('< center/>', '</center>').replace('<center />', '</center>')
-	text = text.replace('</ center >', '</center>').replace('</ center>', '</center>').replace('</center >', '</center>')
+	errorlist = re.findall(r"\<.*?\>", text)
+
+	for item in errorlist:
+		if 'center' in item and len(item) <= 11:
+			if '/' in item and item != '</center>':
+				text = text.replace(item, '</center>')
+				errorcout += 1
+			elif '/' not in item and item != '<center>':
+				text = text.replace(item, '<center>')
+				errorcout += 1
+
 	
 	if text != oldtext:
 		zeroedit = 1
-		printlog('centerfix invalid tags found: '+ article)
+		printlog('centerfix error found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi center tagien syntaksit. "
 		elif errorcout == 1 and lang == 'fi':
@@ -27,7 +35,7 @@ def centerfix(article, text):
 			saves = u"Bot has fixed center tag syntax. "
 
 	elif errorcout == 0:
-		printlog('centerfix invalid tags not found: '+ article)
+		printlog('centerfix error not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
