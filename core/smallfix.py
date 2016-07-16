@@ -9,14 +9,22 @@ def smallfix(article, text):
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	errorcout = text.count('<small/>')+text.count('< small/>')+text.count('<small />')+text.count('< small />')+text.count('</ small >')+text.count('</small >')+text.count('</ small>')
+	
+	errorlist = re.findall(r"\<.*?\>", text)
 
-	text = text.replace('<small/>', '</small>').replace('< small />', '</small>').replace('< small/>', '</small>').replace('<small />', '</small>')
-	text = text.replace('</ small >', '</small>').replace('</ small>', '</small>').replace('</small >', '</small>')
+	for item in errorlist:
+		if 'small' in item and len(item) <= 10:
+			if '/' in item and item != '</small>':
+				text = text.replace(item, '</small>')
+				errorcout += 1
+			elif '/' not in item and item != '<small>':
+				text = text.replace(item, '<small>')
+				errorcout += 1
+
 	
 	if text != oldtext:
 		zeroedit = 1
-		printlog('smallfix invalid tags found: '+ article)
+		printlog('smallfix error found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi small tagien syntaksit. "
 		elif errorcout == 1 and lang == 'fi':
@@ -27,7 +35,7 @@ def smallfix(article, text):
 			saves = u"Bot has fixed small tag syntax. "
 
 	elif errorcout == 0:
-		printlog('smallfix invalid tags not found: '+ article)
+		printlog('smallfix error found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
