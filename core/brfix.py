@@ -9,33 +9,31 @@ def brfix(article, text):
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	errorcout += text.count('< br >')+text.count('< br>')+text.count('<br >')+text.count('</br>')+text.count('< /br >')+text.count('< /br>')+text.count('</br >')+text.count('< br />')+text.count('< br/>')+text.count('<br/ >')+text.count('< br/ >')
-	errorcout += text.count('<br clear="all">')+text.count('< br clear="all" >')+text.count('<br clear="all" >')+text.count('< br clear="all">')+text.count('<br clear="all" />')+text.count('< br clear="all" />')+text.count('< br clear="all"/>')+text.count('<br clear="all"/>')
-	errorcout += text.count('<br clear=all>')+text.count('< br clear=all >')+text.count('<br clear=all >')+text.count('< br clear=all>')+text.count('<br clear=all />')+text.count('< br clear=all />')+text.count('< br clear=all/>')+text.count('<br clear=all/>')
-	errorcout += text.count('<br clear="left">')+text.count('< br clear="left" >')+text.count('<br clear="left" >')+text.count('< br clear="left">')+text.count('<br clear="left" />')+text.count('< br clear="left" />')+text.count('< br clear="left"/>')+text.count('<br clear="left"/>')
-	errorcout += text.count('<br clear="right">')+text.count('< br clear="right" >')+text.count('<br clear="right" >')+text.count('< br clear="right">')+text.count('<br clear="right" />')+text.count('< br clear="right" />')+text.count('< br clear="right"/>')+text.count('<br clear="right"/>')
-	errorcout += text.count('<br clear=left>')+text.count('< br clear=left >')+text.count('<br clear=left >')+text.count('< br clear=left>')+text.count('<br clear=left />')+text.count('< br clear=left />')+text.count('< br clear=left/>')+text.count('<br clear=left/>')
-	errorcout += text.count('<br clear=right>')+text.count('< br clear=right >')+text.count('<br clear=right >')+text.count('< br clear=right>')+text.count('<br clear=right />')+text.count('< br clear=right />')+text.count('< br clear=right/>')+text.count('<br clear=right/>')
+	
+	errorlist = re.findall(r"\<.*?\>", text)
 
-	text = text.replace('< br >', '<br>').replace('< br>', '<br>').replace('<br >', '<br>')
-	text = text.replace('</br>', '<br />').replace('< /br >', '<br />').replace('< /br>', '<br />').replace('</br >', '<br />')
-	text = text.replace('< br/ >', '<br />').replace('< br/>', '<br />').replace('< br />', '<br />').replace('< br/ >', '<br />')
-	text = text.replace('<br clear="all">', '{{clear}}').replace('< br clear="all" >', '{{clear}}').replace('< br clear="all">', '{{clear}}').replace('<br clear="all" >', '{{clear}}')
-	text = text.replace('<br clear="all" />', '{{clear}}').replace('<br clear="all"/>', '{{clear}}').replace('< br clear="all" />', '{{clear}}').replace('< br clear="all"/>', '{{clear}}')
-	text = text.replace('<br clear="left">', '{{clear|left}}').replace('< br clear="left" >', '{{clear|left}}').replace('< br clear="left">', '{{clear|left}}').replace('<br clear="left" >', '{{clear|left}}')
-	text = text.replace('<br clear="left" />', '{{clear|left}}').replace('<br clear="left"/>', '{{clear|left}}').replace('< br clear="left" />', '{{clear|left}}').replace('< br clear="left"/>', '{{clear|left}}')
-	text = text.replace('<br clear="right">', '{{clear|right}}').replace('< br clear="right" >', '{{clear|right}}').replace('< br clear="right">', '{{clear|right}}').replace('<br clear="right" >', '{{clear|right}}')
-	text = text.replace('<br clear="right" />', '{{clear|right}}').replace('<br clear="right"/>', '{{clear|right}}').replace('< br clear="right" />', '{{clear|right}}').replace('< br clear="right"/>', '{{clear|right}}')
-	text = text.replace('<br clear=all>', '{{clear}}').replace('< br clear=all >', '{{clear}}').replace('< br clear=all>', '{{clear}}').replace('<br clear=all >', '{{clear}}')
-	text = text.replace('<br clear=all />', '{{clear}}').replace('<br clear=all/>', '{{clear}}').replace('< br clear=all />', '{{clear}}').replace('< br clear=all/>', '{{clear}}')
-	text = text.replace('<br clear=left>', '{{clear|left}}').replace('< br clear=left >', '{{clear|left}}').replace('< br clear=left>', '{{clear|left}}').replace('<br clear=left >', '{{clear|left}}')
-	text = text.replace('<br clear=left />', '{{clear|left}}').replace('<br clear=left/>', '{{clear|left}}').replace('< br clear=left />', '{{clear|left}}').replace('< br clear=left/>', '{{clear|left}}')
-	text = text.replace('<br clear=right>', '{{clear|right}}').replace('< br clear=right >', '{{clear|right}}').replace('< br clear=right>', '{{clear|right}}').replace('<br clear=right >', '{{clear|right}}')
-	text = text.replace('<br clear=right />', '{{clear|right}}').replace('<br clear=right/>', '{{clear|right}}').replace('< br clear=right />', '{{clear|right}}').replace('< br clear=right/>', '{{clear|right}}')
+	for item in errorlist:
+		if 'br' in item and 'abbr' not in item and 'wbr' not in item and 'ref' not in item:
+			if 'clear' in item and '=' in item:
+				if 'all' in item:
+					text = text.replace(item, '{{clear}}')
+					errorcout += 1
+				elif 'left' in item:
+					text = text.replace(item, '{{clear|left}}')
+					errorcout += 1
+				elif 'right' in item:
+					text = text.replace(item, '{{clear|right}}')
+					errorcout += 1
+			elif '/' in item and item != '<br />' and 'clear' not in item and '=' not in item:
+				text = text.replace(item, '<br />')
+				errorcout += 1
+			elif '/' not in item and item != '<br>' and 'clear' not in item and '=' not in item:
+				text = text.replace(item, '<br>')
+				errorcout += 1
 
 	if text != oldtext:
 		zeroedit = 1
-		printlog('brfix invalid tags found: '+ article)
+		printlog('brfix error found: '+ article)
 		if errorcout > 1 and lang == 'fi':
 			saves = u"Botti korjasi br tagien syntaksit tai korvasi ne {{clear}} mallinnella. "
 		elif errorcout == 1 and lang == 'fi':
@@ -46,7 +44,7 @@ def brfix(article, text):
 			saves = u"Bot has fixed br tag syntax or did replace it with {{clear}}. "
 
 	elif errorcout == 0:
-		printlog('brfix invalid tags not found: '+ article)
+		printlog('brfix error found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
