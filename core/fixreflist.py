@@ -9,19 +9,26 @@ def fixreflist(article, text):
 	checktext = text
 	saves = ''
 	zeroedit = 0
-	if '</ref>' in text and '{{viitteet}}' not in text and '<references/> ' not in text and '{{Viitteet}}' not in text:
+	if '</ref>' in text and '{{viitteet}}' not in text and '<references/> ' not in text and '{{Viitteet}}' not in text and '<references />' not in text:
 		if '==Viitteet==' not in text and '==Lähteet==' not in text and '== Viitteet ==' not in text and '== Lähteet ==' not in text:
 			textlen = len(text)
 			usenextline = 0
 			placingposition = 0
 			for line in reversed(text.split('\n')):
-				if '{{Tynkä' in line:
+				if '{{Tynkä' in line or '{{tynkä' in line and usenextline == 0:
 					usenextline = 1
-				elif '[[Luokka:' in line:
+				elif '[[Luokka:' in line or '[[luokka:' in line and usenextline == 0:
+					usenextline = 1
+				elif '{{täsmennyssivu}}' in line or '{{Täsmennyssivu}}' in line and usenextline == 0:
 					usenextline = 1
 				elif line == '':
+					usenextline = 1
 					continue
-				elif usenextline == 1 and '*' in line[0:1]:
+				elif line == ' ':
+					usenextline = 1
+				elif '[[' in line and ':' in line and usenextline == 0:
+					usenextline = 1
+				elif usenextline == 1 and '*' in line[0:2]:
 					placingposition = text.rfind(line)+len(line)
 					break
 				elif usenextline == 1 and '{{kesken}}' in line:
@@ -33,9 +40,14 @@ def fixreflist(article, text):
 				elif usenextline == 1 and '{{Kesken}}' in line:
 					placingposition = text.rfind(line)+len(line)
 					break
+				elif usenextline == 1 and '<ref' in line:
+					placingposition = text.rfind(line)+len(line)
+					break
 				elif usenextline == 1 and '{{' in line[0:2]:
 					continue
-				elif usenextline == 1 and line == '':
+				elif usenextline == 1 and line == '\n':
+					continue
+				elif usenextline == 1 and '[[' in line[0:2] and ':' in line:
 					continue
 				elif usenextline == 1:
 					placingposition = text.rfind(line)+len(line)
@@ -82,12 +94,14 @@ def fixreflist(article, text):
 				if '*' in text[endposition:endposition+3] or '{{Commons' in text[endposition:endposition+11]:
 					lastposition = 0
 					lastlen = 0
+					time = 0
 					for line in text[endposition:].split('\n'):
+						time += 1
 						if '*' in line or '{{Commons' in line:
 							foundlist = 1
 							lastposition = text[endposition:].find(line)
 							lastlen = len(line)
-						if '*' not in line and lastlen != 0 and lastposition != 0:
+						if '*' not in line and '{{Commons' not in line and '|' not in line and '{{IMDb-h' not in line and lastlen != 0 and lastposition != 0 or time == len(text[endposition:].split('\n')):
 							if addreferences == 1 and foundlist == 1:
 								endposition = endposition + lastposition + lastlen
 								text_data = list(text)
@@ -116,7 +130,7 @@ def fixreflist(article, text):
 
 	if text != oldtext:
 		zeroedit = 1
-		printlog('fixreflist invalid ref list found: '+ article)
+		printlog('fixreflist error found: '+ article)
 		if errorcout == 1 and lang == 'fi' and error == 1:
 			saves = u"Botti lisäsi puuttuvan viitteet osion. "
 		elif errorcout == 1 and lang == 'fi' and error == 2:
@@ -128,7 +142,7 @@ def fixreflist(article, text):
 
 
 	elif errorcout == 0:
-		printlog('fixreflist invalid ref list not found: '+ article)
+		printlog('fixreflist error not found: '+ article)
 		oldtext = text
 
 	return errorcout, text, saves, zeroedit
