@@ -14,54 +14,78 @@ def fixreflist(article, text):
 			textlen = len(text)
 			usenextline = 0
 			placingposition = 0
-			for line in reversed(text.split('\n')):
-				if '{{Tynkä' in line or '{{tynkä' in line and usenextline == 0:
-					usenextline = 1
-				elif '[[Luokka:' in line or '[[luokka:' in line and usenextline == 0:
-					usenextline = 1
-				elif '{{täsmennyssivu}}' in line or '{{Täsmennyssivu}}' in line and usenextline == 0:
-					usenextline = 1
-				elif line == '':
-					usenextline = 1
-					continue
-				elif line == ' ':
-					usenextline = 1
-				elif '[[' in line and ':' in line and usenextline == 0:
-					usenextline = 1
-				elif usenextline == 1 and '*' in line[0:2]:
-					placingposition = text.rfind(line)+len(line)
-					break
-				elif usenextline == 1 and '{{kesken}}' in line:
-					placingposition = text.rfind(line)+len(line)
-					break
-				elif usenextline == 1 and '{{juonipaljastus loppu}}' in line:
-					placingposition = text.rfind(line)+len(line)
-					break
-				elif usenextline == 1 and '{{Kesken}}' in line:
-					placingposition = text.rfind(line)+len(line)
-					break
-				elif usenextline == 1 and '<ref' in line:
-					placingposition = text.rfind(line)+len(line)
-					break
-				elif usenextline == 1 and '{{' in line[0:2]:
-					continue
-				elif usenextline == 1 and line == '\n':
-					continue
-				elif usenextline == 1 and '[[' in line[0:2] and ':' in line:
-					continue
-				elif usenextline == 1:
-					placingposition = text.rfind(line)+len(line)
-					break
 
-				else:
-					placingposition = text.rfind(line)+len(line)
-					break
-			if placingposition != 0:
-				text_data = list(text)
-				text_data.insert(placingposition, '\n\n==Viitteet==\n{{viitteet}}\n')
-				text = ''.join(text_data)
-				errorcout += 1
-				error = 1
+			if '==Aiheesta muualla==' in text or '== Aiheesta muualla ==' in text or '==Kirjallisuutta==' in text or '== Kirjallisuutta ==' in text:
+				position = 0
+				if '==Aiheesta muualla==' in text:
+					position = text.find('==Aiheesta muualla==')
+
+				if '== Aiheesta muualla ==' in text:
+					position = text.find('== Aiheesta muualla ==')
+
+				if '==Kirjallisuutta==' in text:
+					position = text.find('==Kirjallisuutta==')
+
+				if '== Kirjallisuutta ==' in text:
+					position = text.find('== Kirjallisuutta ==')
+
+				if position != 0:
+					text_data = list(text)
+					text_data.insert(position, '\n==Lähteet==\n{{viitteet}}\n\n')
+					text = ''.join(text_data)
+					errorcout += 1
+					error = 3
+
+			else:
+
+				for line in reversed(text.split('\n')):
+					if '{{Tynkä' in line or '{{tynkä' in line and usenextline == 0:
+						usenextline = 1
+					elif '[[Luokka:' in line or '[[luokka:' in line and usenextline == 0:
+						usenextline = 1
+					elif '{{täsmennyssivu}}' in line or '{{Täsmennyssivu}}' in line and usenextline == 0:
+						usenextline = 1
+					elif line == '':
+						usenextline = 1
+						continue
+					elif line == ' ':
+						usenextline = 1
+					elif '[[' in line and ':' in line and usenextline == 0:
+						usenextline = 1
+					elif usenextline == 1 and '*' in line[0:2]:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif usenextline == 1 and '{{kesken}}' in line:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif usenextline == 1 and '{{juonipaljastus loppu}}' in line:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif usenextline == 1 and '{{Kesken}}' in line:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif usenextline == 1 and '<ref' in line:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif usenextline == 1 and '{{' in line[0:2]:
+						continue
+					elif usenextline == 1 and line == '\n':
+						continue
+					elif usenextline == 1 and '[[' in line[0:2] and ':' in line:
+						continue
+					elif usenextline == 1:
+						placingposition = text.rfind(line)+len(line)
+						break
+
+					else:
+						placingposition = text.rfind(line)+len(line)
+						break
+				if placingposition != 0:
+					text_data = list(text)
+					text_data.insert(placingposition, '\n\n==Lähteet==\n{{viitteet}}\n')
+					text = ''.join(text_data)
+					errorcout += 1
+					error = 3
 		else:
 			addreferences = 0
 			endposition = 0
@@ -135,6 +159,8 @@ def fixreflist(article, text):
 			saves = u"Botti lisäsi puuttuvan viitteet osion. "
 		elif errorcout == 1 and lang == 'fi' and error == 2:
 			saves = u"Botti lisäsi puuttuvan viitteet mallinen. "
+		elif errorcout == 1 and lang == 'fi' and error == 3:
+			saves = u"Botti lisäsi puuttuvan lähteet osion. "
 		elif errorcout == 1 and lang == 'en' and error == 2:
 			saves = u"Bot has added missing references template. "
 		elif errorcout == 1 and lang == 'en' and error == 1:
