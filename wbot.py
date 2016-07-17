@@ -22,9 +22,13 @@ try:
 	from core.smallfix import smallfix
 	from core.typofix import typofix
 	from core.fixreflist import fixreflist
+	from core import adiffer
+	from core.reftosrc import reftosrc
 
 	def main():
-		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix']
+		YEL = '\033[93m'
+		END = '\033[0m'
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'fixreflist']
 		start_time = datetime.datetime.now()
 		fixcout = 0
 		zeroedit = 1
@@ -66,6 +70,19 @@ try:
 				fixcout += infoback[0]
 				saves += infoback[2]
 				zeroedit -= infoback[3]
+
+			if text != oldtext:
+				adiffer.show_diff(oldtext, text)
+				print(YEL+saves+END)
+				answer = input('do you agree these changes? [Y/N] ')
+				if answer == 'p':
+					print(text)
+					answer = input('do you agree these changes? [Y/N] ')
+				if answer == 'y' or answer == 'Y':
+					pass
+				else:
+					continue
+
 			
 			if testmode == 1:
 				if saves != '':
