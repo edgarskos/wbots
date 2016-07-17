@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 import urllib.request
-from urllib.parse   import quote
+from urllib.parse import quote
 
 def IsInt(value):
 	try: 
