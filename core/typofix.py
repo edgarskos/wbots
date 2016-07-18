@@ -5,7 +5,7 @@ from topy import topy
 import sys
 
 def typofix(article, text):
-	errorcout = 0
+	errorcount = 0
 	text = str(text)
 	oldtext = text
 	checktext = text
@@ -16,16 +16,15 @@ def typofix(article, text):
 		text = topy.fixtypo(text)
 	
 	if text != oldtext:
-		errorcout += 1
+		errorcount += 1
 		zeroedit = 1
 		printlog('typofix error found: '+ article)
-		if errorcout == 1 and lang == 'fi':
+		if errorcount == 1 and lang == 'fi':
 			saves = u"Botti korjasi typon. "
-		elif errorcout == 1 and lang == 'en':
+		elif errorcount == 1 and lang == 'en':
 			saves = u"Bot has fixed typo. "
 
-	elif errorcout == 0:
+	elif errorcount == 0:
 		printlog('typofix error not found: '+ article)
-		oldtext = text
 
-	return errorcout, text, saves, zeroedit
+	return errorcount, text, saves, zeroedit
