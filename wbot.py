@@ -24,13 +24,14 @@ try:
 	from core.fixreflist import fixreflist
 	from core import adiffer
 	from core.reftosrc import reftosrc
+	from core.uc2um import uc2um
 
 	def main():
 		YEL = '\033[93m'
 		END = '\033[0m'
 		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'fixreflist']
 		start_time = datetime.datetime.now()
-		fixcout = 0
+		fixcount = 0
 		zeroedit = 1
 		if testmode == 0:
 			print('test mode disabled\n')
@@ -67,7 +68,7 @@ try:
 				func = globals()[method]
 				infoback = func(article, text)
 				text = infoback[1]
-				fixcout += infoback[0]
+				fixcount += infoback[0]
 				saves += infoback[2]
 				zeroedit -= infoback[3]
 
@@ -87,7 +88,7 @@ try:
 			if testmode == 1:
 				if saves != '':
 					printlog(saves)
-				if fixcout > 0:
+				if fixcount > 0:
 					log('found something')
 			
 			#write changes
@@ -102,7 +103,7 @@ try:
 				printlog(saves)
 			if text != oldtext and zeroedit == 1:
 				printlog("bot didn't make changes to "+article+ " because zeroedit")
-		printlog('fixcout: '+str(fixcout))
+		printlog('fixcount: '+str(fixcount))
 		stop_time = datetime.datetime.now()
 		total_time = stop_time - start_time
 		printlog("bot duration: "+str(total_time))
