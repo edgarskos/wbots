@@ -3,7 +3,7 @@ import re
 from core.config import *
 
 def centerfix(article, text):
-	errorcout = 0
+	errorcount = 0
 	text = str(text)
 	oldtext = text
 	checktext = text
@@ -16,26 +16,25 @@ def centerfix(article, text):
 		if 'center' in item and len(item) <= 11:
 			if '/' in item and item != '</center>':
 				text = text.replace(item, '</center>')
-				errorcout += 1
+				errorcount += 1
 			elif '/' not in item and item != '<center>':
 				text = text.replace(item, '<center>')
-				errorcout += 1
+				errorcount += 1
 
 	
 	if text != oldtext:
 		zeroedit = 1
 		printlog('centerfix error found: '+ article)
-		if errorcout > 1 and lang == 'fi':
+		if errorcount > 1 and lang == 'fi':
 			saves = u"Botti korjasi center tagien syntaksit. "
-		elif errorcout == 1 and lang == 'fi':
+		elif errorcount == 1 and lang == 'fi':
 			saves = u"Botti korjasi center tagin syntaksin. "
-		elif errorcout > 1 and lang == 'en':
+		elif errorcount > 1 and lang == 'en':
 			saves = u"Bot has fixed center tags syntaxes. "
-		elif errorcout == 1 and lang == 'en':
+		elif errorcount == 1 and lang == 'en':
 			saves = u"Bot has fixed center tag syntax. "
 
-	elif errorcout == 0:
+	elif errorcount == 0:
 		printlog('centerfix error not found: '+ article)
-		oldtext = text
 
-	return errorcout, text, saves, zeroedit
+	return errorcount, text, saves, zeroedit
