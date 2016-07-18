@@ -2,7 +2,7 @@ from core.log import *
 from core.config import *
 
 def reftosrc(article, text):
-	errorcout = 0
+	errorcount = 0
 	text = str(text)
 	oldtext = text
 	checktext = text
@@ -21,8 +21,7 @@ def reftosrc(article, text):
 		printlog('reftosrc error found: '+ article)
 		saves = u"Botti muutti ==Vitteet== osion muotoon ==Lähteet==. "
 
-	elif errorcout == 0:
+	elif errorcount == 0:
 		printlog('reftosrc error found: '+ article)
-		oldtext = text
 
-	return errorcout, text, saves, zeroedit
+	return errorcount, text, saves, zeroedit
