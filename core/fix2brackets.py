@@ -3,7 +3,7 @@ import re
 from core.config import *
 
 def fix2brackets(article, text):
-	errorcout = 0
+	errorcount = 0
 	text = str(text)
 	oldtext = text
 	saves = ''
@@ -14,7 +14,7 @@ def fix2brackets(article, text):
 		if '[' in item[0:2]:
 			if 'https://' in item[0:10] or 'http://' in item[0:10]:
 				if 'Tiedosto:' not in item and 'Kuva:' not in item and 'File:' not in item and 'Image:' not in item:
-					errorcout += 1
+					errorcount += 1
 					location = text.index(item)+len(item)
 					if ']' in text[location+1:location+2]:
 
@@ -33,17 +33,16 @@ def fix2brackets(article, text):
 	if text != oldtext:
 		zeroedit = 1
 		printlog('fix2brackets error found: '+ article)
-		if errorcout > 1 and lang == 'fi':
+		if errorcount > 1 and lang == 'fi':
 			saves = u"Botti poisti ylimääräiset hakasulkeet ulkoisista linkeistä. "
-		elif errorcout == 1 and lang == 'fi':
+		elif errorcount == 1 and lang == 'fi':
 			saves = u"Botti poisti ylimääräiset hakasulkeet ulkoisesta linkistä. "
-		elif errorcout > 1 and lang == 'en':
+		elif errorcount > 1 and lang == 'en':
 			saves = u"Bot has removed excessive brackets from external links. "
-		elif errorcout == 1 and lang == 'en':
+		elif errorcount == 1 and lang == 'en':
 			saves = u"Bot has removed excessive brackets from external link. "
 
-	elif errorcout == 0:
+	elif errorcount == 0:
 		printlog('fix2brackets error not found: '+ article)
-		oldtext = text
 
-	return errorcout, text, saves, zeroedit
+	return errorcount, text, saves, zeroedit
