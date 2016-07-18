@@ -6,7 +6,7 @@ import re
 from core.config import *
 
 def fixreflink(article ,text):
-	errorcout = 0
+	errorcount = 0
 	saves = ''
 	zeroedit = 0
 	linkpartlist = []
@@ -25,7 +25,7 @@ def fixreflink(article ,text):
 		link = link.replace('<ref>', '').replace('</ref>', '')
 		matches = re.search(r'(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}', link)
 		if 'http://' not in link and 'https://' not in link and matches != None and 'ref' not in link and '@' not in link and '{' not in link[0:2] and '[' not in link[1:2] and 'ftp://' not in link and "'" not in link[0:2]:
-			errorcout += 1
+			errorcount += 1
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
 				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
@@ -98,17 +98,16 @@ def fixreflink(article ,text):
 	if text != oldtext:
 		zeroedit = 1
 		printlog('fixreflinks error found')
-		printlog(str(errorcout)+' invalid links found')
-		if errorcout > 1 and lang == 'fi':
+		printlog(str(errorcount)+' invalid links found')
+		if errorcount > 1 and lang == 'fi':
 			saves = u"Botti korjasi linkkejä. "
-		elif errorcout == 1 and lang == 'fi':
+		elif errorcount == 1 and lang == 'fi':
 			saves = u"Botti korjasi linkin. "
-		elif errorcout > 1 and lang == 'en':
+		elif errorcount > 1 and lang == 'en':
 			saves = u"Bot has fixed links. "
-		elif errorcout == 1 and lang == 'en':
+		elif errorcount == 1 and lang == 'en':
 			saves = u"Bot has fixed link. "
-	elif errorcout == 0:
+	elif errorcount == 0:
 		printlog('fixreflinks error not found: '+ article)
-		oldtext = text
 
-	return errorcout, text, saves, zeroedit
+	return errorcount, text, saves, zeroedit
