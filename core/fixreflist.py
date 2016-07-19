@@ -9,6 +9,27 @@ def fixreflist(article, text):
 	checktext = text
 	saves = ''
 	zeroedit = 0
+
+	position2 = 0
+	position3 = 0
+	if '==Lähteet==' in text:
+		position2 = text.find('==Lähteet==')
+	if '== Lähteet ==' in text:
+		position2 = text.find('== Lähteet ==')
+	if '==Aiheesta muualla==' in text:
+		position3 = text.find('==Aiheesta muualla==') 
+	if '== Aiheesta muualla ==' in text:
+		position3 = text.find('== Aiheesta muualla ==')
+	if '==Kirjallisuutta==' in text:
+		position3 = text.find('==Kirjallisuutta==')
+	if '== Kirjallisuutta ==' in text:
+		position3 = text.find('== Kirjallisuutta ==')
+
+	print(position2)
+	print(position3)
+
+
+
 	if '</ref>' in text and '{{viitteet' not in text and '<references/>' not in text and '{{Viitteet' not in text and '<references />' not in text:
 		if '==Viitteet==' not in text and '==Lähteet==' not in text and '== Viitteet ==' not in text and '== Lähteet ==' not in text:
 			textlen = len(text)
@@ -86,6 +107,20 @@ def fixreflist(article, text):
 					text = ''.join(text_data)
 					errorcount += 1
 					error = 3
+
+		elif position2 != 0 and position3 != 0 and position2 > position3:
+			print(position3)
+			print(position2)
+			text = text.replace('==Lähteet==', '')
+			text = text.replace('== Lähteet ==', '')
+			if position3 != 0:
+				text_data = list(text)
+				text_data.insert(position3, '\n==Lähteet==\n{{viitteet}}\n\n')
+				text = ''.join(text_data)
+				errorcount += 1
+				error = 4
+
+
 		else:
 			addreferences = 0
 			endposition = 0
@@ -161,6 +196,8 @@ def fixreflist(article, text):
 			saves = u"Botti lisäsi puuttuvan viitteet mallinen. "
 		elif errorcount == 1 and lang == 'fi' and error == 3:
 			saves = u"Botti lisäsi puuttuvan lähteet osion. "
+		elif errorcount == 1 and lang == 'fi' and error == 4:
+			saves = u"Botti siirsi lähteet osion oikeaan kohtaan, ja lisäsi viitteet mallinen. "
 		elif errorcount == 1 and lang == 'en' and error == 2:
 			saves = u"Bot has added missing references template. "
 		elif errorcount == 1 and lang == 'en' and error == 1:
