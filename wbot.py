@@ -29,7 +29,7 @@ try:
 	def main():
 		YEL = '\033[93m'
 		END = '\033[0m'
-		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'fixreflist']
+		methods = ['fix2brackets', 'fixpiped', 'fixreflink', 'fixblink', 'twovlines', 'brfix', 'centerfix', 'smallfix', 'typofix', 'reftosrc', 'fixreflist']
 		start_time = datetime.datetime.now()
 		fixcount = 0
 		zeroedit = 1
