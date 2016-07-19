@@ -12,7 +12,7 @@ def reftosrc(article, text):
 	
 	textlist = text.split('\n')
 	for l,i in enumerate(textlist):
-		if i=='==Viitteet==':
+		if i=='==Viitteet==' or i=='== Viitteet ==':
 			textlist[l]='==Lähteet=='
 
 	text = '\n'.join(textlist)
