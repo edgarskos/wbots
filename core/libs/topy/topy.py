@@ -8,7 +8,7 @@ from difflib import unified_diff
 
 import re as regex
 from bs4 import BeautifulSoup
-from prettytable import PrettyTable
+from core import adiffer
 
 
 RETF_FILENAME = 'retf-fi.txt'
@@ -78,28 +78,13 @@ def handle_article(regs, article):
 		if count > 0 and newtext != text:
 			replaced += count
 		text = newtext
-	oldtextlist = oldtext.split()
-	textlist = text.split()
-	list3 = oldtextlist + textlist
-	outputlist = []
-	for i in range(0, len(list3)):
-		if ((list3[i] not in oldtextlist) or (list3[i] not in textlist)) and (list3[i] not in outputlist):
-			outputlist[len(outputlist):] = [list3[i]]
+	oldtextlist = oldtext.split('\n')
+	textlist = text.split('\n')
 	if replaced > 0:
-		time = 0
-		t = PrettyTable(['before', ' ', 'after'])
-		t.add_row(['------','', '-----'])
-		t.align = 'l'
-		t.valing = 'm'
-		t.border = False
-		for item in outputlist:
-			try:
-				t.add_row([item,'-->', outputlist[int(len(outputlist) / 2+time)]])
-			except:
-				pass
-			time += 1
+		for oldline, line in zip(oldtextlist, textlist):
+			if oldline != line:
+				adiffer.show_diffl(oldline, line)
 
-		print(t)
 		print()
 
 		answer = input('do you agree these changes? [Y/N] ')
