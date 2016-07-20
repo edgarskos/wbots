@@ -72,7 +72,7 @@ try:
 				saves += infoback[2]
 				zeroedit -= infoback[3]
 
-			if text != oldtext:
+			if text != oldtext and reviewmode == 1:
 				adiffer.show_diff(oldtext, text)
 				print(YEL+saves+END)
 				answer = input('do you agree these changes? [Y/N] ')
