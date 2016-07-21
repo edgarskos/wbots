@@ -34,6 +34,6 @@ def reftosrc(article, text):
 
 
 	elif errorcount == 0:
-		printlog('reftosrc error found: '+ article)
+		printlog('reftosrc error not found: '+ article)
 
 	return errorcount, text, saves, zeroedit
