@@ -5,6 +5,7 @@ from topy import topy
 import sys
 
 def typofix(article, text):
+
 	errorcount = 0
 	text = str(text)
 	oldtext = text
@@ -12,7 +13,7 @@ def typofix(article, text):
 	saves = ''
 	zeroedit = 0
 
-	if text != '':
+	if typofix == 1 and text != '':
 		text = topy.fixtypo(text)
 	
 	if text != oldtext:
