@@ -83,7 +83,10 @@ def fixreflist(article, text):
 			else:
 
 				for line in reversed(text.split('\n')):
-					if '{{Tynkä' in line or '{{tynkä' in line and usenextline == 0:
+					if len(line) > 40:
+						placingposition = text.rfind(line)+len(line)
+						break
+					elif '{{Tynkä' in line or '{{tynkä' in line and usenextline == 0:
 						usenextline = 1
 					elif '[[Luokka:' in line or '[[luokka:' in line and usenextline == 0:
 						usenextline = 1
