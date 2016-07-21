@@ -13,7 +13,7 @@ def brfix(article, text):
 	errorlist = re.findall(r"\<.*?\>", text)
 
 	for item in errorlist:
-		if 'br' in item and 'abbr' not in item and 'wbr' not in item and 'ref' not in item:
+		if 'br' in item and 'abbr' not in item and 'wbr' not in item and 'ref' not in item and '<!--' not in item and '>' in item:
 			if 'clear' in item and '=' in item:
 				if 'all' in item:
 					text = text.replace(item, '{{clear}}')
