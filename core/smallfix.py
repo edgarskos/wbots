@@ -13,7 +13,7 @@ def smallfix(article, text):
 	errorlist = re.findall(r"\<.*?\>", text)
 
 	for item in errorlist:
-		if 'small' in item and len(item) <= 10:
+		if 'small' in item and len(item) <= 10 and '<!--' not in item and '>' in item:
 			if '/' in item and item != '</small>':
 				text = text.replace(item, '</small>')
 				errorcount += 1
