@@ -34,9 +34,13 @@ try:
 		fixcount = 0
 		zeroedit = 1
 		if testmode == 0:
-			print('test mode disabled\n')
+			print('test mode disabled')
 		else:
-			print('test mode enabled\n')
+			print('test mode enabled')
+		if reviewmode == 1:
+			print('review mode enabled\n')
+		else:
+			print('review mode disabled\n')
 		filename = input('list for bots file name: ')
 		filenamef = 'core/lfb/'+filename+'.lfb'
 		#list of articles
@@ -52,6 +56,7 @@ try:
 			main()
 		#check article
 		for article in articles:
+			zeroedit = 1
 			saves = ''
 			site = pywikibot.Site()
 			page = pywikibot.Page(site, article)
@@ -83,11 +88,13 @@ try:
 					pass
 				else:
 					continue
+			else:
+				print(YEL+saves+END)
 
 			
 			if testmode == 1:
 				if saves != '':
-					printlog(saves)
+					log(saves)
 				if fixcount > 0:
 					log('found something')
 			
@@ -96,11 +103,11 @@ try:
 				page.text = text
 				try:
 					page.save(saves)
+					log(saves)
 				except pywikibot.exceptions.OtherPageSaveError:
 					printlog('cannot save article: '+article+' because bots are not allowed')
 					continue
 
-				printlog(saves)
 			if text != oldtext and zeroedit == 1:
 				printlog("bot didn't make changes to "+article+ " because zeroedit")
 		printlog('fixcount: '+str(fixcount))
