@@ -13,7 +13,7 @@ def centerfix(article, text):
 	errorlist = re.findall(r"\<.*?\>", text)
 
 	for item in errorlist:
-		if 'center' in item and len(item) <= 11:
+		if 'center' in item and len(item) <= 11 and '<!--' not in item and '>' in item:
 			if '/' in item and item != '</center>':
 				text = text.replace(item, '</center>')
 				errorcount += 1
