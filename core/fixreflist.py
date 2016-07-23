@@ -10,8 +10,6 @@ def fixreflist(article, text):
 	saves = ''
 	zeroedit = 0
 
-	donttouch = 0
-
 	position2 = 0
 	position3 = 0
 	if '==Lähteet==' in text:
@@ -30,15 +28,6 @@ def fixreflist(article, text):
 		position3 = text.find('==Aiheesta muualla ==') 
 	if '== Aiheesta muualla ==' in text:
 		position3 = text.find('== Aiheesta muualla ==')
-	if '==Kirjallisuutta==' in text:
-		position3 = text.find('==Kirjallisuutta==')
-	if '== Kirjallisuutta==' in text:
-		position3 = text.find('== Kirjallisuutta==')
-	if '==Kirjallisuutta ==' in text:
-		position3 = text.find('==Kirjallisuutta ==')
-	if '== Kirjallisuutta ==' in text:
-		position3 = text.find('== Kirjallisuutta ==')
-
 
 
 	if '</ref>' in text and '{{viitteet' not in text and '<references/>' not in text and '{{Viitteet' not in text and '<references />' not in text:
@@ -134,22 +123,8 @@ def fixreflist(article, text):
 					errorcount += 1
 					error = 3
 
-		elif position2 != 0 and position3 != 0 and position2 > position3:
-			text = text.replace('==Lähteet==', '')
-			text = text.replace('== Lähteet ==', '')
-			if position3 != 0:
-				text_data = list(text)
-				text_data.insert(position3, '\n==Lähteet==\n{{viitteet}}\n\n')
-				text = ''.join(text_data)
-				donttouch = 1
-				errorcount += 1
-				error = 4
-
-
 		else:
-			print(position2, position3)
 			if position2 < position3 or position3 == 0:
-				print('ok')
 				addreferences = 0
 				endposition = 0
 				foundlist = 0
@@ -186,18 +161,17 @@ def fixreflist(article, text):
 							endposition = startposition + len(line)
 							break
 				if endposition != 0:
-					if '*' in text[endposition:endposition+3] or '{{Commons' in text[endposition:endposition+11] or '{{commons' in text[endposition:endposition+11] or '{{Kirjaviite'  in text[endposition:endposition+20] or '{{kirjaviite'  in text[endposition:endposition+20] or '{{Lehtiviite'  in text[endposition:endposition+20] or '{{lehtiviite'  in text[endposition:endposition+20] or '{{Verkkoviite'  in text[endposition:endposition+20] or '{{verkkoviite'  in text[endposition:endposition+20] or '{{Karttaviite' in text[endposition:endposition+20] or '{{karttaviite' in text[endposition:endposition+20] or '{{Standardiviite' in text[endposition:endposition+20] or '{{standardiviite' in text[endposition:endposition+20]:
+					if '*' in text[endposition:endposition+3] or '{{Commons' in text[endposition:endposition+11] or '{{commons' in text[endposition:endposition+11] or '{{Kirjaviite'  in text[endposition:endposition+20] or '{{kirjaviite'  in text[endposition:endposition+20] or '{{Lehtiviite'  in text[endposition:endposition+20] or '{{lehtiviite'  in text[endposition:endposition+20] or '{{Verkkoviite'  in text[endposition:endposition+20] or '{{verkkoviite'  in text[endposition:endposition+20] or '{{Karttaviite' in text[endposition:endposition+20] or '{{karttaviite' in text[endposition:endposition+20] or '{{Standardiviite' in text[endposition:endposition+20] or '{{standardiviite' in text[endposition:endposition+20] or '#' in text[endposition:endposition+2]:
 						lastposition = 0
 						lastlen = 0
 						time = 0
-						print(text[endposition:].split('\n'))
 						for line in text[endposition:].split('\n'):
 							time += 1
-							if '*' in line or '{{Commons' in line or '{{commons' in line or '{{kirjaviite' in line or '{{Kirjaviite' in line or '{{Lehtiviite' in line or '{{lehtiviite' in line or '{{Verkkoviite' in line or '{{verkkoviite' in line or '{{Karttaviite' in line or '{{karttaviite' in line or '{{Standardiviite' in line or '{{standardiviite' in line or '{{IMDb-h' in line and foundlist != 1:
+							if '*' in line or '{{Commons' in line or '{{commons' in line or '{{kirjaviite' in line or '{{Kirjaviite' in line or '{{Lehtiviite' in line or '{{lehtiviite' in line or '{{Verkkoviite' in line or '{{verkkoviite' in line or '{{Karttaviite' in line or '{{karttaviite' in line or '{{Standardiviite' in line or '{{standardiviite' in line or '{{IMDb-h' in line or '#' in line[0:2] and foundlist != 1:
 								foundlist = 1
 								lastposition = text[endposition:].find(line)
 								lastlen = len(line)
-							if '*' not in line and '{{Commons' not in line and '{{commons' not in line and '{{kirjaviite' not in line and '{{Kirjaviite' not in line and '{{Lehtiviite' not in line and '{{lehtiviite' not in line and '{{Verkkoviite' not in line and '{{verkkoviite' not in line and '{{Karttaviite' not in line and '{{karttaviite' not in line and '{{Standardiviite' not in line and '{{standardiviite' not in line and '|' not in line and '{{IMDb-h' not in line and line != '' and lastlen != 0 and lastposition != 0 or time == len(text[endposition:].split('\n')):
+							if '*' not in line and '{{Commons' not in line and '{{commons' not in line and '{{kirjaviite' not in line and '{{Kirjaviite' not in line and '{{Lehtiviite' not in line and '{{lehtiviite' not in line and '{{Verkkoviite' not in line and '{{verkkoviite' not in line and '{{Karttaviite' not in line and '{{karttaviite' not in line and '{{Standardiviite' not in line and '{{standardiviite' not in line and '|' not in line and '{{IMDb-h' not in line and '#' not in line[0:2] and line != '' and lastlen != 0 and lastposition != 0 or time == len(text[endposition:].split('\n')):
 								if addreferences == 1 and foundlist == 1 and line != '\n':
 									endposition = endposition + lastposition + lastlen
 									text_data = list(text)
@@ -232,8 +206,153 @@ def fixreflist(article, text):
 						errorcount += 1
 						error = 2
 
-	if position2 != 0 and position3 != 0 and position2 > position3 and donttouch == 0:
-		if '{{viitteet}}' in text or '{{Viitteet}}' in text or '<references/>' in text or '<references />' in text:
+	if position2 != 0 and position3 != 0 and position2 > position3:
+		print('ddd')
+		foundlist = 0
+		referencesfound = 0
+		startposition = 0
+		endposition = 0
+
+		if '===Viitteet===' in text or '=== Viitteet===' in text or '===Viitteet ===' in text or '=== Viitteet ===' in text:
+			referencesfound = 1
+		for line in reversed(text.split('\n')):
+			if '==Lähteet==' in line or '== Lähteet==' in line or '==Lähteet ==' in line or '== Lähteet ==' in line:
+				startposition = text.rfind(line)
+				if line == '==Lähteet==':
+					endposition = startposition + len(line)
+					break
+				elif line == '== Lähteet==':
+					endposition = startposition + len(line)
+					break
+				elif line == '==Lähteet ==':
+					endposition = startposition + len(line)
+					break
+				elif line == '== Lähteet ==':
+					endposition = startposition + len(line)
+					break
+
+		if endposition != 0:
+			if '*' in text[endposition:endposition+3] or '{{Commons' in text[endposition:endposition+11] or '{{commons' in text[endposition:endposition+11] or '{{Kirjaviite'  in text[endposition:endposition+20] or '{{kirjaviite'  in text[endposition:endposition+20] or '{{Lehtiviite'  in text[endposition:endposition+20] or '{{lehtiviite'  in text[endposition:endposition+20] or '{{Verkkoviite'  in text[endposition:endposition+20] or '{{verkkoviite'  in text[endposition:endposition+20] or '{{Karttaviite' in text[endposition:endposition+20] or '{{karttaviite' in text[endposition:endposition+20] or '{{Standardiviite' in text[endposition:endposition+20] or '{{standardiviite' in text[endposition:endposition+20] or '#' in text[endposition:endposition+2]:
+				lastposition = 0
+				lastlen = 0
+				time = 0
+				for line in text[endposition:].split('\n'):
+					time += 1
+					if '*' in line or '{{Commons' in line or '{{commons' in line or '{{kirjaviite' in line or '{{Kirjaviite' in line or '{{Lehtiviite' in line or '{{lehtiviite' in line or '{{Verkkoviite' in line or '{{verkkoviite' in line or '{{Karttaviite' in line or '{{karttaviite' in line or '{{Standardiviite' in line or '{{standardiviite' in line or '{{IMDb-h' in line or '#' in line[0:2] and foundlist != 1:
+						foundlist = 1
+						lastposition = text[endposition:].find(line)
+						lastlen = len(line)
+					if '*' not in line and '{{Commons' not in line and '{{commons' not in line and '{{kirjaviite' not in line and '{{Kirjaviite' not in line and '{{Lehtiviite' not in line and '{{lehtiviite' not in line and '{{Verkkoviite' not in line and '{{verkkoviite' not in line and '{{Karttaviite' not in line and '{{karttaviite' not in line and '{{Standardiviite' not in line and '{{standardiviite' not in line and '|' not in line and '{{IMDb-h' not in line and '#' not in line[0:2] and line != '' and lastlen != 0 and lastposition != 0 or time == len(text[endposition:].split('\n')):
+						if foundlist == 1 and line != '\n':
+							endposition = endposition + lastposition + lastlen
+							break
+		if foundlist == 1 and endposition != 0 and startposition != 0:
+			if referencesfound == 1:
+				list_data = text[startposition:endposition]
+				text = text.replace(text[startposition:endposition], '')
+				data_list = text.split('\n')
+				try:
+					data_list.remove('==Lähteet==')
+				except:
+					pass
+				try:
+					data_list.remove('== Lähteet==')
+				except:
+					pass
+				try:
+					data_list.remove('==Lähteet ==')
+				except:
+					pass
+				try:
+					data_list.remove('== Lähteet ==')
+				except:
+					pass
+				try:
+					data_list.remove('===Viitteet===')
+				except:
+					pass
+				try:
+					data_list.remove('=== Viitteet===')
+				except:
+					pass
+				try:
+					data_list.remove('===Viitteet ===')
+				except:
+					pass
+				try:
+					data_list.remove('=== Viitteet ===')
+				except:
+					pass
+				try:
+					data_list.remove('{{viitteet}}')
+				except:
+					pass
+				try:
+					data_list.remove('{{Viitteet}}')
+				except:
+					pass
+				try:
+					data_list.remove('<references/>')
+				except:
+					pass
+				try:
+					data_list.remove('<references />')
+				except:
+					pass
+				text = '\n'.join(data_list)
+				if position3 != 0:
+					text_data = list(text)
+					text_data.insert(position3, '\n'+list_data+'\n===Viitteet===\n{{viitteet}}\n\n')
+					text = ''.join(text_data)
+					errorcount += 1
+					error = 5
+
+			else:
+				list_data = text[startposition:endposition]
+				text = text.replace(text[startposition:endposition], '')
+				data_list = text.split('\n')
+				try:
+					data_list.remove('==Lähteet==')
+				except:
+					pass
+				try:
+					data_list.remove('== Lähteet==')
+				except:
+					pass
+				try:
+					data_list.remove('==Lähteet ==')
+				except:
+					pass
+				try:
+					data_list.remove('== Lähteet ==')
+				except:
+					pass
+				try:
+					data_list.remove('{{viitteet}}')
+				except:
+					pass
+				try:
+					data_list.remove('{{Viitteet}}')
+				except:
+					pass
+				try:
+					data_list.remove('<references/>')
+				except:
+					pass
+				try:
+					data_list.remove('<references />')
+				except:
+					pass
+				text = '\n'.join(data_list)
+				if position3 != 0:
+					text_data = list(text)
+					text_data.insert(position3, '\n'+list_data+'\n\n')
+					text = ''.join(text_data)
+					errorcount += 1
+					error = 5
+
+		else:
+			
 			data_list = text.split('\n')
 			try:
 				data_list.remove('==Lähteet==')

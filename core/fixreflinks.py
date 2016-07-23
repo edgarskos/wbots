@@ -28,6 +28,8 @@ def fixreflink(article ,text):
 			errorcount += 1
 			if '[' in link and ']' in  link:
 				linkpartlist = link.split('.')
+				if ' ' in linkpartlist[0] or ' ' in linkpartlist[1][0:1]:
+					continue
 				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
 					if '[' not in linkpartlist[0][0:1] and any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
@@ -59,7 +61,8 @@ def fixreflink(article ,text):
 					invalidlinks.append(orglink)
 			else:
 				linkpartlist = link.split('.')
-
+				if ' ' in linkpartlist[0] or ' ' in linkpartlist[1][0:1]:
+					continue
 				if len(linkpartlist) >= 3 and 'w' in linkpartlist[0] and linkpartlist[0] != 'www':
 					if any((char in linkpartlist[0]) for char in characters):
 						if any((char in linkpartlist[0]) for char in special):
