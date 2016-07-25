@@ -1,5 +1,5 @@
 #config file
 testmode = 0
 lang = 'fi'
-reviewmode = 1
+reviewmode = 0
 typofix = 1
